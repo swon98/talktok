@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+</head>
+<body class="notice">
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+
+<main class="notice-page wrap">
+    <h2>공지사항</h2>
+    <form th:action="@{/notice/list}" method="get">
+        <input name="keyword" id="keyword" placeholder="제목"/>
+        <button type="submit" class="btn-submit">검색</button>
+        <table>
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>조회수</th>
+                <th>작성일</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            <tr th:each="notice : ${list}">
+                <td th:text="${notice.noNo}"></td>
+                <td>
+                    <a th:href="@{/notice/detail(noNo=${notice.noNo}, page=${list.number}+1)}" th:text="${notice.noSubject}"></a>
+                </td>
+                <td th:text="관리자"></td>
+                <td th:text="${notice.noReadcount}"></td>
+                <td th:text="${notice.noDate}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+
+        <div th:if="${list.totalPages > 1}">
+            <ul class="pagination">
+                <!-- '이전' 버튼에 대한 수정: 페이지에서 2를 빼지 않고 1을 빼기 -->
+                <li th:if="${list.number > 0}" class="page-item">
+                    <a th:href="@{/notice/list(page=${list.number}, keyword=${param.keyword})}" class="page-link">이전</a>
+                </li>
+
+                <!-- 페이지 번호 리스트: 여기는 변경 없음, 정상적으로 1부터 시작 -->
+                <li th:each="pageNumber : ${#numbers.sequence(1, list.totalPages)}"
+                    th:class="${pageNumber == list.number + 1 ? 'active' : ''}">
+                    <a th:href="@{/notice/list(page=${pageNumber}, keyword=${param.keyword})}" th:text="${pageNumber}"></a>
+                </li>
+
+                <!-- '다음' 버튼에 대한 수정: 페이지에서 2를 더하지 않고 1을 더하기 -->
+                <li th:if="${list.number < list.totalPages - 1}" class="page-item">
+                    <a th:href="@{/notice/list(page=${list.number+2}, keyword=${param.keyword})}" class="page-link">다음</a>
+                </li>
+            </ul>
+        </div>
+        <div th:if="${session.stuEmail == 'admin@talktok.com'}" class="btns">
+            <input type="button" value="글쓰기" th:attr="onclick=|location='write'|"/>
+        </div>
+    </form>
+</main>
+<div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+
+</body>
+</html>

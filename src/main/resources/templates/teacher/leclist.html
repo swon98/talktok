@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <style>
+        .list-box {margin-top: 30px;}
+        .list-box .list + .list {margin: 40px 0;}
+        .list-box .list h4 {text-decoration:#f9a01b wavy underline;}
+        .list-box .list p {line-height: 2;}
+        .list-box .list a.linked {display: block; margin: 20px 0;}
+    </style>
+</head>
+<body>
+
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+<link href="/css/user.css" rel="stylesheet">
+<main class="wrap">
+    <div class="container">
+        <h3 class="title">내 강의목록
+            <a onclick="history.go(-1); return false;">뒤로가기<i class="fa-solid fa-chevron-right"></i></a>
+        </h3>
+        <div class="list-box">
+            <div th:each="list : ${lecture}" class="list">
+                -------
+                <a th:href="@{/lecture/detail(no=${list.lec_no}, page=1)}"><input type="button" value="상세보기" class="btn btn-primary btn-sm" style="background-color: #f9a01b; border-color: #f9a01b"/></a>
+                <a th:href="@{/study/room(lec_no=${list.lec_no})}"><input type="button" value="스터디룸 입장" class="btn btn-primary btn-sm" style="background-color: #f9a01b; border-color: #f9a01b"/></a>
+                <a class="linked">
+                    <h4 th:text="${list.lec_name}"></h4>
+                    <p><span th:text="${list.lec_day}"></span></p>
+                    <p><span th:text="${list.lec_time}"></span></p>
+                    <p><span th:text="${list.lec_startdate}"></span> ~ <span th:text="${list.lec_enddate}"></span></p>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+
+</body>
+</html>

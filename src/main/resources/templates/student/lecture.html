@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <style>
+        .list-box {margin-top: 30px; display: flex; flex-wrap: wrap; align-items: center;}
+        .list-box > div {flex-basis: 25%;}
+        .list-box > div.none {text-align: center;}
+        .list-box > div + div {margin: 40px 0;}
+        .list-box > div .list h4 {text-decoration:#f9a01b solid underline 2px; margin-bottom:10px;}
+        .list-box > div .list p {line-height: 1.3;}
+        .list-box > div .list a.linked {display: block; margin: 20px 0;}
+        .list-box > div .list input[type="button"] {border-radius: 50px; font-size: 15px;}
+    </style>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<link href="/css/user.css" rel="stylesheet">
+<main class="wrap">
+    <div class="container">
+        <h3 class="title">내 강의목록
+            <a onclick="history.go(-1); return false;">뒤로가기<i class="fa-solid fa-chevron-right"></i></a>
+        </h3>
+        <div class="list-box" th:if="${not #lists.isEmpty(stuLecture)}">
+            <div th:each="entry, iter: ${stuLecture}">
+                <div th:with="reviewCheck=${reviewCheck[iter.index]}" class="list">
+                    -------
+                    <a th:href="@{/study/room(lec_no=${entry.key})}"><input type="button" value="스터디룸 입장" class="btn btn-primary btn-sm" style="background-color: #f9a01b; border-color: #f9a01b"/></a>
+                    <a th:if="${reviewCheck == 0}" th:href="@{/review/write(lec_no=${entry.key},tea_no=${entry.value.teaNo})}"><input type="button" value="후기 작성" class="btn btn-primary btn-sm" style="background-color: #f9a01b; border-color: #f9a01b"/></a>
+                    <a class="linked" th:href="@{/lecture/detail(page=1, no=${entry.key})}">
+                        <h4 th:text="${entry.value.lec_name}"></h4>
+                        <p><span th:text="${entry.value.lec_day}"></span>&nbsp;&nbsp;<span th:text="${entry.value.lec_time}"></span></p>
+                        <p><span th:text="${entry.value.lecStartdate}"></span> ~ <span th:text="${entry.value.lec_enddate}"></span></p>
+                    </a>
+                </div>
+            </div>
+            <div class="none" th:if="${#lists.isEmpty(stuLecture)}">
+                <p>수강한 강의가 없습니다.</p>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

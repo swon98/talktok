@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <style>
+    .review_contents {
+        position: relative;
+        display: inline-block;
+        width: 100%
+    }
+    .wrapper_small {
+        width: 1150px;
+        margin: 0 auto;
+        position: relative;
+    }
+    .review_box_items {
+        padding: 24px 10px;
+        border-bottom: 1px solid #e5e5e5;
+        position: relative;
+    }
+    .review_detail {
+        width: 950px;
+        color: #666666;
+
+    }
+    .score_star {
+        position: absolute;
+        top: 0;
+        right: 0px;
+        margin-top: 30px;
+    }
+    .score_star div {
+        display: inline-block;
+    }
+    .writerDay_var2 {
+        padding-top: 20px;
+    }
+    .writerDay_var2 span {
+        padding-right: 20px;
+    }
+    .lec_name{
+        font-size: 14px;
+        color: #ba9f7e;
+        margin-bottom: 10px;
+    }
+    .tea_name{
+        font-size: 12px;
+        color: #800020;
+
+    }
+    .review_name div{
+        display: inline-block;
+    }
+
+    .review_edit div{
+        display: inline-block;
+    }
+    .review_contents h2{
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    a{
+        color : black;
+    }
+
+
+
+
+    .rate{
+        background: url(https://aldo814.github.io/jobcloud/html/images/user/star_bg02.png) no-repeat;
+        width: 121px;
+        height: 20px;
+        position: relative;
+    }
+    .rate span{
+        position: absolute;
+        background: url(https://aldo814.github.io/jobcloud/html/images/user/star02.png);
+        width: auto;height: 20px;
+    }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination-list {
+        list-style: none;
+        display: flex;
+    }
+
+    .pagination-list li {
+        margin-right: 5px;
+    }
+
+    .pagination-list li a {
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        text-decoration: none;
+    }
+
+    .pagination-list li.active a {
+        background-color: #007bff;
+        color: #fff;
+        border-color: #007bff;
+    }
+
+    .pagination-list li a:hover {
+        background-color: #f8f9fa;
+    }
+    /* 추가된 스타일 */
+    .review_detail_short {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* 라인 수 제한 */
+        -webkit-box-orient: vertical;
+    }
+    .hidden-content {
+        display: none;
+    }
+</style>
+<style>
+    @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+    .rate { display: inline-block;border: 0;margin-right: 15px;}
+    .rate > input {display: none;}
+    .rate > label {float: right;color: #ddd}
+    .rate > label:before {display: inline-block;font-size: 1rem;padding: .3rem .2rem;margin: 0;cursor: pointer;font-family: FontAwesome;content: "\f005 ";}
+    .rate .half:before {content: "\f089 "; position: absolute;padding-right: 0;}
+    .rate input:checked ~ label,
+    .rate label:hover,.rate label:hover ~ label { color: #f73c32 !important;  }
+    .rate input:checked + .rate label:hover,
+    .rate input input:checked ~ label:hover,
+    .rate input:checked ~ .rate label:hover ~ label,
+    .rate label:hover ~ input:checked ~ label { color: #f73c32 !important;  }
+
+</style>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+<link href="/css/user.css" rel="stylesheet">
+
+<main class="wrap">
+<div class="review_contents container">
+    <h3 class="title">내 강의후기
+        <a onclick="history.go(-1); return false;">뒤로가기<i class="fa-solid fa-chevron-right"></i></a>
+    </h3>
+    <div class="wrapper_small">
+        <div class="review_container" th:each="review : ${reviews}">
+            <div class="review_box_items">
+                <div>
+                    <div>
+                        <div class="review_edit" th:if="${session.stuNo == review.stu_no}">
+                            <a th:href="@{/review/update(rev_no=${review.rev_no}, stu_no=${review.stu_no})}"><input type="button" value="수정하기" class="btn btn-primary btn-sm" style="background-color: #f9a01b; border-color: #f9a01b"/></a>
+                            <a th:href="@{/review/delete(rev_no=${review.rev_no}, stu_no=${review.stu_no})}"><input type="button" value="삭제 하기" class="btn btn-primary btn-sm" style="background-color: #f9a01b; border-color: #f9a01b"/></a>
+                        </div>
+                        <div class="review_name">
+                            <a th:href="@{/lecture/detail(no=${review.tea_no}, page=0)}"><div class="lec_name" th:text="${review.lec_name}"></div></a>
+                            <a th:href="@{/teacher/detail(tea_no=${review.tea_no})}"><div class="tea_name" th:text="${review.tea_name}"></div></a>
+                        </div>
+                        <a th:href="@{/review/detail(rev_no=${review.rev_no})}"><h2 th:text="${review.rev_name}"></h2></a>
+                        <div class="review_detail">
+                            <div id="short_${stat.index}" class="review_detail_short" th:utext="${#strings.abbreviate(review.rev_detail, 150)}"></div>
+                            <div id="full_${stat.index}" class="hidden-content" th:utext="${review.rev_detail}"></div>
+                            <button th:if="${#strings.length(review.rev_detail) > 150}" onclick="toggleContent('${stat.index}')" class="btn btn-link" data-id="${stat.index}">더보기</button>
+                        </div>
+                        <div class="writerDay_var2">
+                            <span th:text="${review.rev_writer}"></span>
+                            <span th:text="${#strings.substring(review.rev_date, 0,10)}"></span>
+                            조회수 : <span th:text="${review.rev_ReadCount}"></span>
+                        </div>
+                        <div class="score_star">
+                            <div class="rate">
+                                <span th:if="${review.rev_score >= 10}" style="width: 100%"></span>
+                                <span th:if="${review.rev_score >= 9}" style="width: 92%"></span>
+                                <span th:if="${review.rev_score >= 8}" style="width: 80%"></span>
+                                <span th:if="${review.rev_score >= 7}" style="width: 72%"></span>
+                                <span th:if="${review.rev_score >= 6}" style="width: 60%"></span>
+                                <span th:if="${review.rev_score >= 5}" style="width: 52%"></span>
+                                <span th:if="${review.rev_score >= 4}" style="width: 40%"></span>
+                                <span th:if="${review.rev_score >= 3}" style="width: 30%"></span>
+                                <span th:if="${review.rev_score >= 2}" style="width: 20%"></span>
+                                <span th:if="${review.rev_score >= 1}" style="width: 10%"></span>
+                            </div>
+                            <div th:text="|${review.rev_score}점|"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pagination">
+            <ul class="pagination-list">
+                <li th:if="${page.hasPrevious()}">
+                    <a th:href="@{'/review/albe?page=' + ${page.number - 1}+'&stu_no='${stuNo}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="pageNumber : ${#numbers.sequence(1, page.totalPages)}">
+                    <a th:href="@{'/review/able?page=' + ${pageNumber} + '&stu_no=' + ${stuNo}}" th:text="${pageNumber}" th:class="${page.number == pageNumber ? 'active' : ''}"></a>
+
+                </li>
+                <li th:if="${page.hasNext()}">
+                    <a th:href="@{'/review/albe?page=' + ${page.number + 1}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</main>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

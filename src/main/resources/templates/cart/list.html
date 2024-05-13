@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <style>
+        .wrap h2 {margin-bottom: 30px;}
+        .wrap h2 a {float: right; color: #999; font-size: initial; margin-top: 10px; cursor: pointer;}
+        .wrap h2 a i {margin-left: 10px; font-size: 0.9em;}
+    </style>
+</head>
+<body>
+    <div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+
+    <main class="notice-page wrap">
+        <h2>강의 장바구니
+            <a onclick="history.go(-1); return false;">뒤로가기<i class="fa-solid fa-chevron-right"></i></a>
+        </h2>
+        <div th:if="${cartItems.isEmpty()}">
+            <h3>장바구니에 상품이 없습니다.</h3>
+        </div>
+        <div th:unless="${cartItems.isEmpty()}">
+            <form action="/cart/delete" method="POST">
+                <div class="btns">
+                    <input class="btn btn-pay" id="payment" type="button" value="결제"/>
+                    <input class="btn-submit" type="submit" value="선택항목 삭제"/>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll" /></th>
+                        <th>강의 번호</th>
+                        <th>강의명</th>
+                        <th>강의 시작일</th>
+                        <th>강의 종료일</th>
+                        <th>금액</th>
+                        <th>수량</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="cart : ${cartItems}">
+                        <td class="selected">
+                            <input type="checkbox" name="cartCheck" id="cartCheck" th:value="${cart.getStudent().getStuNo()} + '-' + ${cart.getLecture().getLecNo()}" class="cartCheck">
+                        </td>
+                        <td class="lecNo" th:text="${cart.getLecture().getLecNo()}"></td>
+                        <td><a class="lecName" th:href="@{/lecture/detail(page=${page}, no=${cart.getLecture().getLecNo()})}" th:text="${cart.getLecture().getLec_name()}"></a></td>
+                        <td th:text="${cart.getLecture().getLecStartdate()}"></td>
+                        <td th:text="${cart.getLecture().getLec_enddate()}"></td>
+                        <td class="price" th:text="${cart.getLecPrice()} + '원'"></td>
+                        <td th:text="${cart.getCaCount()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <div style="opacity: 0;">
+            <div id="email" th:text="${session.stuEmail}"></div>
+        </div>
+    </main>
+    <div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+</body>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var selectAll = document.getElementById('selectAll');
+            var checkboxes = document.querySelectorAll('input[name="cartCheck"]');
+
+            // 전체선택 체크박스 선택시 마다 실행
+            selectAll.addEventListener('change', function() {
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = this.checked;
+                }
+            });
+
+            // 모든 개별 체크박스가 선택되거나 선택 해제될 때 "모두 선택" 체크박스 상태 업데이트
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    if (!this.checked) {
+                        selectAll.checked = false;
+                    } else {
+                        // 모든 체크박스가 체크되어 있을 때만 "모두 선택" 체크박스 체크
+                        selectAll.checked = Array.from(checkboxes).every(c => c.checked);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script> <!-- jQuery -->
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script> <!-- 포트원 결제 -->
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script> <!-- iamport.payment.js -->
+    <script>
+        // 다중 결제 처리
+        var totalPrice = 0;
+        var totalCount = 0;
+        var selectedRowsInfo = [];
+        var email = document.getElementById('email').innerText
+        function calculateTotalPrice() { //총 가격 구해오기
+            totalPrice = 0; // totalPrice 초기화
+            var selectedRows = document.querySelectorAll('.cartCheck:checked'); // 체크된 체크박스 선택하고
+            totalCount = selectedRows.length;
+            selectedRows.forEach(function(row) {
+                var priceCell = row.closest('tr').querySelector('.price'); // 선택된 행에서만 가격 선택
+                var priceText = priceCell.textContent.trim();
+                var price = parseInt(priceText.replace('원', '').trim()); // 정수로 변환, '원' 없애기
+                totalPrice += price;
+            });
+            console.log('총 가격:', totalPrice + '원');
+            console.log("총 갯수:", totalCount + "개");
+        }
+        function getSelectedRowsInfo() { //데이터 구해서 리스트로 만들기
+            selectedRowsInfo = []; // 초기화
+            var selectedRows = document.querySelectorAll('.cartCheck:checked');
+            selectedRows.forEach(function(row) {
+                var rowInfo = {}; // 각 행 정보담을 객체임
+                var parentRow = row.closest('tr'); // 속한 행 정보 구해오기
+
+                // 행에서 필요한 정보만 뽑아서 객체에 담음
+                rowInfo.lecNo = parentRow.querySelector('.lecNo').textContent.trim();
+                rowInfo.lecName = parentRow.querySelector('.lecName').textContent.trim();
+                rowInfo.price = parseInt(parentRow.querySelector('.price').textContent.replace('원', '').trim());
+
+                selectedRowsInfo.push(rowInfo); // 리스트에 객체 추가
+            });
+            console.log('리스트 구하기:', selectedRowsInfo);
+            console.log('리스트 구하기:', selectedRowsInfo[0].lecName);
+        }
+
+        // 결제창 함수 넣어주기
+        const buyButton = document.getElementById('payment')
+        buyButton.setAttribute('onclick', `kakaoPay('${email}')`)
+
+        var IMP = window.IMP;
+
+        let today = new Date();
+        let hours = today.getHours(); // 시
+        let minutes = today.getMinutes(); // 분
+        let seconds = today.getSeconds(); // 초
+        let milliseconds = today.getMilliseconds();
+        let makeMerchantUid = `${hours}` + `${minutes}` + `${seconds}` + `${milliseconds}`;
+
+        function kakaoPay(email) {
+
+            calculateTotalPrice();
+            getSelectedRowsInfo();
+            var lectureName = selectedRowsInfo[0].lecName
+            lectureName += " 외 " + (totalCount - 1) + "건";
+            console.log("lectureName=" + lectureName);
+            console.log("email="+email);
+
+            if (confirm("결제하시겠습니까?")) { // 구매 클릭 시 확인
+                IMP.init("imp35176617"); // 고객사 식별코드
+                IMP.request_pay({
+                    pg: 'kakaopay.TC0ONETIME', // PG사 코드표에서 선택
+                    pay_method: 'card', // 결제 방식
+                    merchant_uid: "IMP" + makeMerchantUid, // 결제 고유 번호
+                    name: lectureName, // 강의 이름
+                    amount: totalPrice, // 가격
+                    buyer_email: email // 구매자 정보
+                }, async function kakaoPayCallback(rsp) {
+                    if (rsp.success) { // 결제 성공시
+                        console.log(rsp);
+
+                        const paymentInfoList = [];
+                        for (let i = 0; i < selectedRowsInfo.length; i++) {
+                            const paymentInfo = {
+                                price: selectedRowsInfo[i].price,
+                                email: rsp.buyer_email,
+                                lecNo: parseInt(selectedRowsInfo[i].lecNo),
+                                lecName: selectedRowsInfo[i].lecName,
+                            };
+                            paymentInfoList.push(paymentInfo);
+                        }
+                        console.log('DB저장 정보: ' + JSON.stringify(paymentInfoList));
+
+                        // DB저장 요청
+                        try {
+                            const response = await fetch('/savePayments', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    paymentInfoList: paymentInfoList
+                                })
+                            });
+                            if (response.ok) {
+                                alert('결제 완료!');
+                                window.location.reload();
+                            } else {
+                                alert(`error:[${response.status}]\n결제 정보를 서버에 전송하는 데 실패했습니다.`);
+                            }
+                        } catch (error) {
+                            console.error('결제 정보 전송 에러:', error);
+                            alert('결제 정보를 서버에 전송하는 데 실패했습니다.');
+                        }
+                    } else if (rsp.success == false) { // 결제 실패시
+                        alert(rsp.error_msg)
+                    }
+                });
+            } else { // 구매 확인 알림창 취소 클릭시 돌아가기
+                return false;
+            }
+        }
+
+    </script>
+
+</html>

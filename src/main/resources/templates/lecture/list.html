@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <style>
+        .wrap h2 {text-align: center; font-size: 200%; letter-spacing: -0.02em;}
+        .list-box {display:flex; flex-wrap:wrap; gap:2rem; margin: 50px 0;}
+        .list-box .list {position:relative; display: block; width: calc(25% - 24px); overflow:hidden; border-radius: 6px; border: 1px solid #ddd; transition: 0.3s;}
+        .list-box .list:hover {border-color:#333;}
+        .list-box .list a {display: block;}
+        .list-box .list a .text {padding: 20px;}
+        .list-box .list a .text p {font-size: 15px; color: #3b3b3b; line-height: 1.4;}
+        .list-box .list a .text h3 {margin-bottom:10px; color:#f9a01b; font-size: 1.1em;}
+        .list-box .list a img {width: 100%; height: 290px; object-fit: cover;}
+        .paging-box .paging {display: flex; gap: 10px; justify-content: center;}
+        .paging-box .paging li {display: flex; justify-content: center; align-items: center; width: 35px; height: 35px; border: 1px solid #ddd;}
+        .paging-box .paging li.active {background: #f9a01b; border-color: #f9a01b;}
+        .paging-box .paging li a {padding: 4px 12px;}
+        .paging-box .paging li.active a {color:#fff;}
+        .paging-box .paging li a i {font-size:13px; margin: 0 -2px 0 -1px;}
+
+    </style>
+</head>
+<body class="lecture">
+    <div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+
+    <main class="wrap">
+        <h2>커리큘럼</h2>
+        <section>
+            <div class="list-box">
+                <div th:each="list : ${lectureList}" class="list">
+                    <a th:href="@{/lecture/detail(page=${currentPage+1}, no=${list.lec_no})}">
+                        <div class="lecture-img"></div>
+                        <div class="text">
+                            <h3 th:text="${list.lec_name}" class="title"></h3>
+                            <p><span th:text="${list.lec_day}"></span>&nbsp;&nbsp;<span th:text="${list.lec_time}"></span></p>
+                            <p>월 <span th:text="${list.lec_price}"></span>원</p>
+                            <p><span th:text="${list.lec_startdate}"></span> ~ <span th:text="${list.lec_enddate}"></span></p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function() {
+                    // 이미지 URL 배열
+                    var lecList = ['/images/lecture01.jpg', '/images/lecture02.jpg', '/images/lecture03.jpg',
+                        '/images/lecture04.jpg', '/images/lecture05.jpg'];
+
+                    // 각 list 요소에 이미지 추가
+                    $('.list').each(function(index) {
+                        var img = lecList[index % lecList.length]; // 이미지 URL 배열의 인덱스를 순환
+                        var imageElement = $('<img>').attr({
+                            src: img,
+                            alt: '강좌 이미지'
+                        });
+                        $(this).find('.lecture-img').append(imageElement);
+                    });
+                });
+            </script>
+            <!--페이징-->
+            <div th:if="${lectureList.totalPages > 1}" class="paging-box">
+                <ul class="paging">
+                    <li th:if="${not lectureList.first}">
+                        <a th:href="@{/lecture/list(page=1)}">«</a>
+                    </li>
+                    <li th:each="pageNumber : ${#numbers.sequence(1, lectureList.totalPages)}"
+                        th:class="${pageNumber == lectureList.number + 1 ? 'active' : ''}">
+                        <a th:href="@{'/lecture/list?page=' + ${pageNumber}}">[[${pageNumber}]]</a>
+                    </li>
+                    <li th:if="${not lectureList.last}">
+                        <a th:href="@{/lecture/list(page=${lectureList.totalPages})}">»</a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+</body>
+</html>

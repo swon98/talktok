@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원정보수정</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <style>
+        .container {
+            position: relative;
+            height: 100%;
+            font-size: 0;
+        }
+        div {
+            display: block;
+        }
+        .content {
+            flex: 1 1 auto;
+            padding-top: 30px;
+        }
+        .form {
+            display: flex;
+            box-sizing: border-box;
+            flex-direction: column;
+            height: 100%;
+        }
+        .form_content {
+            flex: 1 1 auto;
+        }
+        @media (min-width: 768px) {
+            .form_section {
+                margin-right: 20px;
+                margin-left: 20px;
+                padding-right: 0;
+                padding-left: 0;
+            }
+        }
+        .form_section {
+            padding: 0 20px;
+        }
+        .join_toggle:not([style*="display: none"])+.form_list {
+            margin-top: 10px;
+        }
+        .form_list {
+            position: relative;
+            margin-bottom: 10px;
+            border-radius: 6px;
+        }
+        .form_item:first-of-type {
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+        }
+        .form_item:last-child {
+            border-bottom: none;
+        }
+        .form_item {
+            display: flex;
+            align-items: center;
+            position: relative;
+            box-sizing: border-box;
+            max-width: 100%;
+            min-height: 50px;
+            padding: 0 10px 0 45px;
+            border-bottom: 1px solid #ccc;
+        }
+        .input {
+            flex: 1 1 auto;
+            box-sizing: border-box;
+            width: 100%;
+            font-size: 16px;
+            line-height: 22px;
+            color: #222;
+        }
+        button, input, select, textarea {
+            border-radius: 0;
+            border: none;
+            background: 0 0;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            outline: 0;
+            text-decoration: none;
+            cursor: pointer;
+            -webkit-text-size-adjust: none;
+        }
+        .form_item+.form_item {
+            margin-top: -1px;
+        }
+        .btn_submit_wrap {
+            flex: none;
+            padding: 20px;
+        }
+        .btn_submit {
+            width: 100%;
+            padding: 14px 0;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 0, 0, .05);
+            background: #f9a01b;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 22px;
+            color: #fff;
+        }
+        button {
+            cursor: pointer;
+        }
+        input[type="button"] {
+            padding: 10px 20px;
+            background-color: #f9a01b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 16px;
+        }
+        .form_label_container {
+            display: flex;
+            flex-direction: row; /* 요소들을 가로로 정렬 */
+            align-items: center; /* 세로 중앙 정렬 */
+            margin-right: 10px; /* 입력 필드와의 간격 */
+        }
+        .form_label_container span {
+            min-width: 130px;
+            color: #000; /* 텍스트 색상 보장 */
+            font-size: 16px; /* 가독성 있는 폰트 크기 */
+        }
+    </style>
+    <script>
+        //핸드폰번호 자동하이픈 기능
+        const autoHyphen = (target) => {
+            target.value = target.value
+                .replace(/[^0-9]/g, '')
+                .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, "$1-$2-$3")
+                .replace(/(\-{1,2})$/g, "");
+        }
+        // 페이지 로드 시 입력 필드에 하이픈 적용
+        window.onload = function() {
+            const stuPhoneInput = document.getElementById('stuPhone');
+            if (stuPhoneInput) {
+                autoHyphen(stuPhoneInput); // 기존 번호에 하이픈 적용
+            }
+        };
+        function boardCheck() {
+            if ($.trim($("#stuNickname").val()) == "") {
+                alert("닉네임을 입력하세요");
+                $("#stuNickname").val("").focus();
+                return false;
+            }
+            if ($.trim($("#stuName").val()) == "") {
+                alert("이름을 입력하세요");
+                $("#stuNname").val("").focus();
+                return false;
+            }
+            if ($.trim($("#stuPhone").val()) == "") {
+                alert("핸드폰번호를 입력하세요");
+                $("#stuPhone").val("").focus();
+                return false;
+            }
+            const phoneValue = document.getElementById("stuPhone").value;
+            document.getElementById("stuPhone").value = removeHyphen(phoneValue);
+        }
+    </script>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<div class="container">
+    <div class="inner">
+        <div class="content">
+<h2>회원정보변경</h2>
+<form method="post" action="update" onsubmit="return boardCheck();">
+    <input type="hidden" name="stuEmail" value="${session.stuEmail }" />
+    <input type="hidden" name="stuSocial" value="social">
+    <div class="form_content">
+        <div class="form_section">
+            <div class="form_list">
+                <div class="form_item user" id="divId">
+                    <div class="form_label_container">
+                        <span>아이디 : </span>
+                    </div>
+                    <input type="text" name="stuEmail" readonly th:value="${session.stuEmail}" class="input">
+                </div>
+                <div class="form_item" id="divname">
+                    <div class="form_label_container">
+                        <span>이름 : </span>
+                    </div>
+                    <input type="text" name="stuName" id="stuName" th:value="${studentDto.stuName}" class="input" maxlength="8" />
+                </div>
+                <div class="form_item" id="divnickname">
+                    <div class="form_label_container">
+                        <span>닉네임 : </span>
+                    </div>
+                    <input type="text" name="stuNickname" id="stuNickname" th:value="${studentDto.stuNickname}" class="input" maxlength="8" />
+                </div>
+                <div class="form_item" id="divphone">
+                    <div class="form_label_container">
+                        <span>핸드폰 : </span>
+                    </div>
+                    <input type="text" name="stuPhone" id="stuPhone" th:value="${studentDto.stuPhone}" class="input" maxlength="13" oninput="autoHyphen(this)" pattern="010-[0-9]{3,4}-[0-9]{4}" autocomplete="off"/>
+                </div>
+
+                <div class="btn_submit_wrap">
+                    <input type="submit" value="수정하기" class="btn_submit"><br>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>강사 정보수정</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        // 핸드폰번호 자동하이픈 기능
+        const autoHyphen = (target) => {
+            target.value = target.value
+                .replace(/[^0-9]/g, '')
+                .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, "$1-$2-$3")
+                .replace(/(\-{1,2})$/g, "");
+        }
+
+        // 페이지 로드 시 입력 필드에 하이픈 적용
+        window.onload = function() {
+            const teaPhoneInput = document.getElementById('teaPhone');
+            if (teaPhoneInput) {
+                autoHyphen(teaPhoneInput); // 기존 번호에 하이픈 적용
+            }
+        };
+        function boardCheck() {
+            if ($.trim($("#teaName").val()) == "") {
+                alert("이름을 입력하세요");
+                $("#teaNname").val("").focus();
+                return false;
+            }
+            if ($.trim($("#teaNickname").val()) == "") {
+                alert("닉네임을 입력하세요");
+                $("#teaNickname").val("").focus();
+                return false;
+            }
+            if ($.trim($("#teaPhone").val()) == "") {
+                alert("핸드폰번호를 입력하세요");
+                $("#teaPhone").val("").focus();
+                return false;
+            }
+            // 계좌번호 필드 검사 (선택적 입력)
+            if ($.trim($("#teaAccount").val()) != "" && !/^\d{10,14}$/.test($("#teaAccount").val())) {
+                alert("계좌번호는 10자리에서 14자리 사이여야 합니다");
+                $("#teaAccount").focus();
+                return false;
+            }
+            if ($.trim($("#teaIntro").val()).length > 500) {
+                alert("한줄소개는 500자 이내로 입력하세요");
+                $("#teaIntro").focus();
+                return false;
+            }
+            if ($.trim($("#teaDetail").val()).length > 2000) {
+                alert("자기소개는 2000자 이내로 입력하세요");
+                $("#teaDetail").focus();
+                return false;
+            }
+            var teaCareer = $.trim($("#teaCareer").val());
+            if (teaCareer === "") {
+                alert("학력을 입력하세요");
+                $("#teaCareer").focus();
+                return false;
+            }
+/*            var nation = $("#teaNation").val();
+            if (nation === "" || !["원어민", "영어사용국", "비영어권"].includes(nation)) {
+                alert("출신국가를 올바르게 선택하세요");
+                $("#teaNation").focus();
+                return false;
+            }*/
+            /*            if ($.trim($("#teaImage").val()) == "") {
+                            alert("이미지를 입력하세요");
+                            $("#teaImage").val("").focus();
+                            return false;
+                        }*/
+            if ($.trim($("#teaPwd").val()) == "") {
+                alert("비밀번호를 입력하세요");
+                $("#teaPwd").val("").focus();
+                return false;
+            }
+            const phoneValue = document.getElementById("teaPhone").value;
+            document.getElementById("teaPhone").value = removeHyphen(phoneValue);
+        }
+    </script>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+<link href="/css/user.css" rel="stylesheet">
+
+<main class="wrap">
+<div class="container">
+    <div class="content">
+        <h3 class="title">정보수정<a onclick="history.go(-1); return false;">뒤로가기<i class="fa-solid fa-chevron-right"></i></a></h3>
+        <form method="post" action="/teacher/update" onsubmit="return boardCheck();" class="form" enctype="multipart/form-data">
+            <div class="form_content">
+                <div class="form_section">
+                    <div class="form_list">
+                        <div class="form_item user" id="divId">
+                            <input type="hidden" name= "teaEmail" th:value="${teacherDto.teaEmail}">
+                            <div class="form_label_container">
+                                <span>아이디 : </span>
+                            </div>
+                            <input type="text" readonly th:value="${session.teaEmail}" class="input">
+                        </div>
+                        <div class="form_item" id="divname">
+                            <div class="form_label_container">
+                                <span>이름 : </span>
+                            </div>
+                            <input type="text" name="teaName" id="teaName" th:value="${teacherDto.teaName}" class="input" />
+                        </div>
+                        <div class="form_item" id="divnickname">
+                            <div class="form_label_container">
+                                <span>닉네임 : </span>
+                            </div>
+                            <input type="text" name="teaNickname" id="teaNickname" th:value="${teacherDto.teaNickname}" class="input" />
+                        </div>
+                        <div class="form_item" id="divphone">
+                            <div class="form_label_container">
+                                <span>핸드폰 : </span>
+                            </div>
+                            <input type="text" name="teaPhone" id="teaPhone" th:value="${teacherDto.teaPhone}" class="input" maxlength="13" oninput="autoHyphen(this)" pattern="010-[0-9]{3,4}-[0-9]{4}" autocomplete="off"/>
+                        </div>
+                        <div class="form_item" id="divaccount">
+                            <div class="form_label_container">
+                                <span>계좌번호 : </span>
+                            </div>
+                            <input type="text" name="teaAccount" id="teaAccount" th:value="${teacherDto.teaAccount}" class="input" maxlength="14" />
+                        </div>
+                        <div class="form_item" id="divintro">
+                            <div class="form_label_container">
+                                <span>한줄소개 : </span>
+                            </div>
+                            <input type="text" name="teaIntro" id="teaIntro" th:value="${teacherDto.teaIntro}" class="input" />
+                        </div>
+                        <div class="form_item" id="divdetail">
+                            <div class="form_label_container">
+                                <span>자기소개 : </span>
+                            </div>
+                            <input type="text" name="teaDetail" id="teaDetail" th:value="${teacherDto.teaDetail}" class="input" />
+                        </div>
+                        <div class="form_item" id="divcareer">
+                            <div class="form_label_container">
+                                <span>학력 : </span>
+                            </div>
+                            <input type="text" name="teaCareer" id="teaCareer" th:value="${teacherDto.teaCareer}" class="input" />
+                        </div>
+                        <div class="form_item" id="divimage">
+                            <div class="form_label_container">
+                                <span>프로필사진 : </span>
+                            </div>
+                            <input type="file" name="teaImage1" id="teaImage" placeholder="사진" th:value="${teacherDto.teaImage}"class="input" />
+                        </div>
+                        <div class="form_item" id="divpassword">
+                            <div class="form_label_container">
+                                <span>비밀번호 확인 : </span>
+                            </div>
+                            <input type="password" name="teaPwd" id="teaPwd" class="input"/>
+                        </div>
+                        <div class="btn_submit_wrap">
+                            <input type="submit" value="수정하기" class="btn_submit">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</main>
+<div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+</body>
+</html>

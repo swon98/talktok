@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>경고</title>
+</head>
+<body>
+<form id="deleteForm" action="/notice/delete" method="post" style="display:none;">
+    <input type="hidden" name="noNo" th:value="${noNo}">
+</form>
+
+<script>
+    var confirmed = confirm("정말 삭제하시겠습니까?");
+
+    if (confirmed) {
+        alert("삭제되었습니다.")
+        document.getElementById('deleteForm').submit();
+    } else {
+        history.back();
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <style>
+        main.wrap {margin:70px auto; display: flex; gap:40px; flex-wrap: wrap;}
+        .contents-box {flex-basis: 70%;}
+        .contents-box h3 {color: #f9a01b; font-size: 1.4em;}
+        .float-box {flex-basis: 25%;}
+        .float-box .btn {width:48%; height:45px; border:1px solid #f9a01b; color: #f9a01b; border-radius: 30px; transition: .3s;}
+        .float-box .btn-list {width: 100%; border-color: #ccc;}
+        .float-box .btn-cart {margin:10px 0 20px 2%; background: #f9a01b; color:#fff;}
+        .float-box .btn-list a {display: block;}
+        .float-box form {display: inline;}
+        .review-box {width:100%;}
+        .review-box .none {color: #666;}
+        .review-box h3 {margin-bottom:30px; border-bottom: 1px solid; font-size : 1.2em; line-height: 2;}
+        .review-box .list-wrap {max-height: 500px; overflow-y: auto;}
+        .review-box .list-wrap .list {padding: 0 0 25px;}
+        .review-box .list-wrap .list + .list {padding:25px 0; border-top: 1px solid #ccc;}
+        .review-box .list-wrap .list p .starRating i {color: #ffca00;}
+        .review-box .list-wrap .list p.title {font-size: 1.1em;}
+        .review-box .list-wrap .list p.detail {padding-bottom: 10px; font-size : 0.9em; color: #666; line-height: 1.4;}
+        /*scrollbar*/
+        .review-box .list-wrap::-webkit-scrollbar {width: 8px;}
+        .review-box .list-wrap::-webkit-scrollbar-thumb {background-color: #999; border-radius: 10px;}
+        .review-box .list-wrap::-webkit-scrollbar-track {background-color: #eee; border-radius: 10px;}
+
+    </style>
+</head>
+<body class="lecture">
+    <div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+
+    <main class="wrap">
+        <section class="box contents-box">
+            <div>
+                <h3 id="lecName" th:text="${lectureDto.lec_name}"></h3>
+                <p><span th:text="${lectureDto.lec_day}"></span>&nbsp;&nbsp;<span th:text="${lectureDto.lec_time}"></span></p>
+                <p>월 <span id="lecPrice" th:text="${lectureDto.lec_price}"></span>원</p>
+                <p><span th:text="${lectureDto.lec_startdate}"></span> ~ <span th:text="${lectureDto.lec_enddate}"></span></p>
+                <p th:text="${lectureDto.lec_detail}"></p>
+                <p>선생님 번호 : <span th:text="${lectureDto.tea_no}"></span></p>
+            </div>
+        </section>
+        <section class="box float-box">
+            <div th:if="${session.stuNo != null || session.teaNo != null}">
+                <button class="btn btn-pay" id="payment">구매하기</button>
+                <form th:action="@{/cart/add}" method="post">
+                    <input type="hidden" name="lec_no" th:value="${lectureDto.lec_no}"/>
+                    <button type="submit" class="btn btn-cart">장바구니 담기</button>
+                </form>
+            </div>
+            <div th:if="${session.stuNo == null && session.teaNo == null}">
+                <button class="btn btn-pay" onclick="location.href='/student/login'">구매하기</button>
+                <button class="btn btn-cart" onclick="location.href='/student/login'">장바구니 담기</button>
+            </div>
+            <button class="btn btn-list"><a th:href="@{/lecture/list(page=${page})}">목록</a></button>
+        </section>
+
+        <section class="box review-box">
+            <h3>선생님 후기</h3>
+            <div class="none" th:if="${reviews.size() == 0}">
+                <p>등록된 후기가 존재하지 않습니다.</p>
+            </div>
+            <div class="list-wrap">
+                <div class="list" th:each="list : ${reviews}">
+                    <input type="hidden" th:data-score="${list.rev_score}" class="score"> <!-- 점수를 data-score 에 저장 -->
+                    <p><span class="starRating"></span> <span th:text="'('+${list.rev_score}+'점)'"></span></p>
+                    <p class="title"><span th:text="${list.rev_name}"></span></p>
+                    <p class="detail"><span th:utext="${list.rev_detail}"></span></p>
+                    <p>
+                        <span th:text="${#strings.substring(list.rev_writer, 0,1)+'*'+#strings.substring(list.rev_writer, 2,3)}"></span>
+                        &nbsp;&nbsp;
+                        <span th:text="${#strings.substring(list.rev_date, 0,10)}"></span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            // 모든 .score 요소에 대해 별점생성 함수 호출
+            var scores = document.querySelectorAll('.score');
+            scores.forEach(function(scoreElement) {
+                var score = parseInt(scoreElement.getAttribute('data-score'));
+                var ratingElement = scoreElement.nextElementSibling.querySelector('.starRating');
+                generateStarRating(score, ratingElement);
+            });
+            // 별점생성 함수
+            function generateStarRating(score, ratingElement) {
+                var fullStars = Math.floor(score / 2);
+                var halfStar = score % 2 === 1;
+                var starsHtml = '';
+
+                for (var i = 0; i < fullStars; i++) {
+                    starsHtml += '<i class="fa-solid fa-star"></i>';
+                }
+
+                if (halfStar) {
+                    starsHtml += '<i class="fa-regular fa-star-half-stroke"></i>';
+                }
+
+                ratingElement.innerHTML = starsHtml;
+            }
+        </script>
+
+        <div style="opacity: 0;">
+            <div id="email" th:text="${email}"></div>
+            <div id="lecNo" th:text="${lectureDto.lec_no}"></div>
+        </div>
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script> <!-- jQuery -->
+        <script src="https://cdn.iamport.kr/v1/iamport.js"></script> <!-- 포트원 결제 -->
+        <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script> <!-- iamport.payment.js -->
+        <script>
+            // 구매자 정보 및 필요한 정보 추출
+            const email = document.getElementById('email').innerText;
+            const lecPrice = document.getElementById('lecPrice').innerText;
+            const lectureName = document.getElementById('lecName').innerText;
+            const lectureNo = document.getElementById('lecNo').innerText;
+
+            // 결제창 함수 넣어주기
+            const buyButton = document.getElementById('payment')
+            buyButton.setAttribute('onclick', `kakaoPay('${email}')`)
+
+            var IMP = window.IMP;
+
+            let today = new Date();
+            let hours = today.getHours(); // 시
+            let minutes = today.getMinutes(); // 분
+            let seconds = today.getSeconds(); // 초
+            let milliseconds = today.getMilliseconds();
+            let makeMerchantUid = `${hours}` + `${minutes}` + `${seconds}` + `${milliseconds}`;
+
+            function kakaoPay(email) {
+                if (confirm("구매하시겠습니까?")) { // 구매 클릭 시 확인
+
+                    IMP.init("imp35176617"); // 고객사 식별코드
+                    IMP.request_pay({
+                        pg: 'kakaopay.TC0ONETIME', // PG사 코드표에서 선택
+                        pay_method: 'card', // 결제 방식
+                        merchant_uid: "IMP" + makeMerchantUid, // 결제 고유 번호
+                        name: lectureName, // 강의 이름
+                        amount: lecPrice, // 가격
+                        buyer_email: email // 구매자 정보
+                    }, async function kakaoPayCallback(rsp) {
+                        if (rsp.success) { // 결제 성공시
+                            console.log(rsp);
+
+                            const paymentInfo = {
+                                price: rsp.paid_amount,
+                                email: rsp.buyer_email,
+                                lecNo: parseInt(lectureNo),
+                                lecName: rsp.name,
+                            }
+                            console.log('DB저장 정보: ' + JSON.stringify(paymentInfo));
+
+                            // DB저장 요청
+                            try {
+                                const response = await fetch('/savePayment', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        paymentInfo: paymentInfo
+                                    })
+                                });
+                                if (response.ok) {
+                                    alert('결제 완료!');
+                                    // window.location.reload();
+                                } else {
+                                    alert(`error:[${response.status}]\n결제 정보를 서버에 전송하는 데 실패했습니다.`);
+                                }
+                            } catch (error) {
+                                console.error('결제 정보 전송 에러:', error);
+                                alert('결제 정보를 서버에 전송하는 데 실패했습니다.');
+                            }
+                        } else if (rsp.success == false) { // 결제 실패시
+                            alert(rsp.error_msg)
+                        }
+                    });
+                } else { // 구매 확인 알림창 취소 클릭시 돌아가기
+                    return false;
+                }
+            }
+        </script>
+
+    </main>
+
+    <div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+</body>
+</html>

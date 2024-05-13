@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원정보수정</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        // 핸드폰번호 자동하이픈 기능
+        const autoHyphen = (target) => {
+            target.value = target.value
+                .replace(/[^0-9]/g, '')
+                .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, "$1-$2-$3")
+                .replace(/(\-{1,2})$/g, "");
+        }
+
+        // 페이지 로드 시 입력 필드에 하이픈 적용
+        window.onload = function() {
+            const stuPhoneInput = document.getElementById('stuPhone');
+            if (stuPhoneInput) {
+                autoHyphen(stuPhoneInput); // 기존 번호에 하이픈 적용
+            }
+        };
+        function boardCheck() {
+            if ($.trim($("#stuNickname").val()) == "") {
+                alert("닉네임을 입력하세요");
+                $("#stuNickname").val("").focus();
+                return false;
+            }
+            if ($.trim($("#stuName").val()) == "") {
+                alert("이름을 입력하세요");
+                $("#stuNname").val("").focus();
+                return false;
+            }
+            if ($.trim($("#stuPhone").val()) == "") {
+                alert("핸드폰번호를 입력하세요");
+                $("#stuPhone").val("").focus();
+                return false;
+            }
+            if ($.trim($("#stuPwd").val()) == "") {
+                alert("비밀번호를 입력하세요");
+                $("#stuPwd").val("").focus();
+                return false;
+            }
+            const phoneValue = document.getElementById("stuPhone").value;
+            document.getElementById("stuPhone").value = removeHyphen(phoneValue);
+
+        }
+    </script>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<link href="/css/user.css" rel="stylesheet">
+
+<main class="wrap">
+    <div class="container">
+        <div class="content">
+            <h3 class="title">정보수정<a onclick="history.go(-1); return false;">뒤로가기<i class="fa-solid fa-chevron-right"></i></a></h3>
+            <form method="post" action="update" onsubmit="return boardCheck();" class="form">
+                <div class="form_content">
+                    <div class="form_section">
+                        <div class="form_list">
+                            <div class="form_item user" id="divId">
+                                <div class="form_label_container">
+                                    <span>아이디 : </span>
+                                </div>
+                                <input type="text" name="stuEmail" readonly th:value="${session.stuEmail}" class="input">
+                            </div>
+                            <div class="form_item" id="divname">
+                                <div class="form_label_container">
+                                    <span>이름 : </span>
+                                </div>
+                                <input type="text" name="stuName" id="stuName" th:value="${studentDto.stuName}" class="input" maxlength="8" />
+                            </div>
+                            <div class="form_item" id="divnickname">
+                                <div class="form_label_container">
+                                    <span>닉네임 : </span>
+                                </div>
+                                <input type="text" name="stuNickname" id="stuNickname" th:value="${studentDto.stuNickname}" class="input" maxlength="8" />
+                            </div>
+                            <div class="form_item" id="divphone">
+                                <div class="form_label_container">
+                                    <span>핸드폰 : </span>
+                                </div>
+                                <input type="text" name="stuPhone" id="stuPhone" th:value="${studentDto.stuPhone}" class="input" maxlength="13" oninput="autoHyphen(this)" pattern="010-[0-9]{3,4}-[0-9]{4}" autocomplete="off"/>
+                            </div>
+                            <div class="form_item" id="divpassword">
+                                <div class="form_label_container">
+                                    <span>비밀번호 확인 : </span>
+                                </div>
+                                <input type="password" name="stuPwd" id="stuPwd" class="input" placeholder="비밀번호 확인"/>
+                            </div>
+                            <div class="btn_submit_wrap">
+                                <input type="submit" value="수정하기" class="btn_submit"><br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

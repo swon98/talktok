@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <link rel="stylesheet" href="/css/user.css">
+    <script>
+        function boardCheck() {
+            var stuEmail = $.trim($("#stuEmail").val());
+            if (stuEmail === "") {
+                alert("아이디를 입력하세요");
+                $("#stuEmail").val("").focus();
+                return false;
+            }
+            if (!checkId(userId)) {
+                alert("아이디는 4~12자 이내로 소문자와 숫자만 사용할 수 있습니다");
+                $("#stuEmail").val("").focus();
+                return false;
+            }
+            if ($.trim($("#stuPwd").val()) == "") {
+                alert("비밀번호를 입력하세요");
+                $("#stuPwd").val("").focus();
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<main id="container" class="wrap container">
+    <div class="content">
+        <div class="login_wrap">
+            <ul class="menu_wrap" role="tablist">
+                <li class="menu-item" role="presentation">
+                    <a href="#none" id="loinid" class="menu_id on" role="tab" aria-selected="true" >
+                        <!--                        <input type="button" value="학생회원가입" onclick="location='/student/join'">-->
+                        <span class="menu_text">
+                            <span class="text">학생회원 로그인</span>
+                        </span>
+                    </a>
+                </li>
+                <li class="menu_item" role="presentation">
+                    <a href="#none" id="ones" class="menu_ones" role="tab" aria-selected="false" onclick="location='/teacher/login'">
+                        <span class="menu_text">
+                            <span class="text">강사회원 로그인</span>
+                        </span>
+                    </a>
+
+                </li>
+            </ul>
+            <form id="formStuLogin" name="formStuLogin" action="/student/login" method="post" onsubmit="return boardCheck()">
+                <ul class="panel_wrap">
+                    <li class="panel_item" role="tabpanel" aria-controls="loinid">
+                        <div class="panel_inner" role="id_line">
+                            <div class="id_pw_wrap">
+                                <div class="input_row" id="id_line">
+                                    <input type="text" id="stuEmail" name="stuEmail" placeholder="이메일" title="이메일" class="input_text" /> <br/>
+                                </div>
+                                <div class="input_row" id="pw_line">
+                                    <input type="password" id="stuPwd" name="stuPwd" placeholder="비밀번호" title="비밀번호" class="input_text" /> <br/>
+                                </div>
+                            </div>
+                            <div class="btn_login_wrap">
+                                <button type="submit" class="btn_login" id="log.login">
+                                    <span class="btn_text">로그인</span>
+                                </button>
+                                <div>
+                                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=425f66c4214454a68dfaa2dc66f30387&redirect_uri=http://localhost:80/oauth/kakao/callback&response_type=code">
+                                        <img src="/images/kakao_login_medium_narrow.png">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <ul class="find_wrap" id="find_wrap">
+            <li>
+                <a target="" onclick="location='/student/findPwd'" class="find_text">비밀번호 찾기</a>
+            </li>
+            <li>
+                <a target="" onclick="location='/student/join'" class="find_text">회원가입</a>
+            </li>
+        </ul>
+    </div>
+</main>
+
+<div th:replace="~{footer :: footer}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+</body>
+</html>

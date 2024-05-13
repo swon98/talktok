@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>학생 회원가입 완료</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+<body>
+<!-- 타임리프 표현식을 사용하여 JavaScript 코드에 값을 전달합니다. -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var result = [[${result}]];
+    if(result === 0){
+        alert("가입이 완료되었습니다.");
+        location.href="/student/login";
+    } else{
+        location.href="/student/login";
+    }
+    /*]]>*/
+</script>
+
+</body>
+</html>

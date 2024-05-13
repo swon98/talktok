@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+<link href="/css/user.css" rel="stylesheet">
+
+    <main class="mypage-wrap wrap">
+        <div class="info">
+            <div class="mode">
+                <a class="on">학생</a>
+                <a>강사</a>
+            </div>
+            <div class="profile">
+                <p class="img-box"><img src="/images/ico_student.png"></p>
+                <p th:text="${#strings.substringBefore(session.stuEmail, '@')+'님'}"></p>
+            </div>
+            <div class="btns">
+                <button onclick="location='/student/update'">정보수정 하러가기 <i class="fa-regular fa-pen-to-square"></i> </button>
+                <button onclick="location='/student/logout'">로그아웃</button>
+            </div>
+        </div>
+        <div class="detail">
+            <div class="box">
+                <h3>나의 활동</h3>
+                <button onclick="location='/student/lecture'"><i class="fa-solid fa-chalkboard-user"></i> 내 강의목록</button>
+                <button class="mr" onclick="location='/cart/list'"><i class="fa-regular fa-bookmark"></i> 강의 장바구니</button>
+                <a th:href="@{'/review/able?stu_no='+${session.stuNo}}"><button><i class="fa-regular fa-heart"></i> 내 강의후기</button></a>
+                <button class="mr" onclick="location='/student/payment'"><i class="fa-regular fa-credit-card"></i>강의 결제내역</button>
+            </div>
+            <div class="box">
+                <h3>나의 정보</h3>
+                <button onclick="location='/student/withdraw'"><i class="fa-solid fa-user-slash"></i> 회원탈퇴</button>
+                <button class="mr" onclick="location='/student/pwdUpdate'"><i class="fa-solid fa-repeat"></i> 비밀번호 변경</button>
+            </div>
+            <div class="box img-wrap">
+                <div class="img-box"><a href="/notice/detail?noNo=26&page=1"><img src="/images/banner07.jpg"></a></div>
+                <div class="img-box"><a href="/notice/detail?noNo=29&page=1"><img src="/images/banner06.jpg"></a></div>
+            </div>
+        </div>
+    </main>
+
+<div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+</body>
+</html>

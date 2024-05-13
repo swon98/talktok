@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <link rel="stylesheet" href="/css/user.css">
+    <script>
+        //핸드폰번호 자동하이픈 기능
+        const autoHyphen = (target) => {
+            target.value = target.value
+                .replace(/[^0-9]/g, '')
+                .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(\-{1,2})$/g, "");
+        }
+
+        //핸드폰번호 하이픈제거 함수
+        const removeHyphen = (phone) => {
+            return phone.replace(/-/g, '');
+        }
+
+        // 회원가입 폼 검증
+        function boardCheck() {
+            var stuEmail = $.trim($("#stuEmail").val());
+            if (stuEmail === "") {
+                alert("아이디를 입력하세요");
+                $("#stuEmail").val("").focus();
+                return false;
+            }
+
+            // 이메일 형식 검사
+            var email = document.getElementById("stuEmail").value;
+            var emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailFormat.test(email)) {
+                alert("유효하지 않은 이메일 형식입니다.");
+                return false; // 유효성 검사 실패
+            }
+
+            // 비밀번호 입력 검사
+            if ($.trim($("#stuPwd").val()) === "") {
+                alert("비밀번호를 입력하세요");
+                $("#stuPwd").val("").focus();
+                return false;
+            }
+
+            // 비밀번호 확인 입력 검사
+            if ($.trim($("#stuPwd2").val()) === "") {
+                alert("비밀번호 확인을 입력하세요");
+                $("#stuPwd2").val("").focus();
+                return false;
+            }
+
+            // 비밀번호 일치 검사
+            if($.trim($("#stuPwd").val()) !== $.trim($("#stuPwd2").val())){
+                alert("비밀번호가 다릅니다!");
+                $("#stuPwd").val("");
+                $("#stuPwd2").val("");
+                $("#stuPwd").focus();
+                return false;
+            }
+
+            // 이름 입력 검사
+            if ($.trim($("#stuName").val()) === "") {
+                alert("이름을 입력하세요");
+                $("#stuName").val("").focus();
+                return false;
+            }
+
+            // 닉네임 입력 검사
+            if ($.trim($("#stuNickname").val()) === "") {
+                alert("닉네임을 입력하세요");
+                $("#stuNickname").val("").focus();
+                return false;
+            }
+
+            // 핸드폰번호 입력 검사
+            if ($.trim($("#stuPhone").val()) === "") {
+                alert("핸드폰번호를 입력하세요");
+                $("#stuPhone").val("").focus();
+                return false;
+            }
+
+            // 아이디 중복 검사 결과 확인
+            var chkresult = $("#id-result").text();
+            if (chkresult === "") {
+                alert("아이디 중복검사를 해주세요");
+                return false;
+            } else if (chkresult.includes("이미 존재하는 이메일입니다")) {
+                alert("중복된 아이디로 가입이 불가합니다");
+                return false;
+            }
+
+            // 핸드폰번호에서 하이픈 제거
+            const stuPhone = removeHyphen(document.getElementById("stuPhone").value);
+            document.getElementById("stuPhone").value = stuPhone;
+            return true; // 검증 성공
+        }
+
+        // 중복 아이디 검사
+        function idCheck() {
+            console.log("idCheck called");  // 호출 로그
+            var stuEmail = $("#stuEmail").val().trim();
+            if (stuEmail === "") {
+                alert("아이디를 입력하세요");
+                $("#stuEmail").focus();
+                return false;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/student/idCheck',
+                data: {stuEmail: stuEmail},
+                success: function(result) {
+                    if (result == 1) {
+                        $("#id-result").html("<span style='color: red;'>이미 존재하는 이메일입니다.</span>");
+                        isEmailChecked = false;
+                        $("#stuEmail").focus();
+                    } else {
+                        $("#id-result").html("<span style='color: green;'>사용 가능한 이메일입니다.</span>");
+                        isEmailChecked = true;
+                        $("#stuPwd").focus();
+                    }
+                },
+                error: function(xhr) {
+                    alert("오류 발생: " + xhr.responseText);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            $('#id-check').off('click').on('click', function() {
+                console.log("Button clicked");  // 버튼 클릭 로그
+                return idCheck();
+            });
+        });
+    </script>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+
+<main class="wrap">
+<div class="login_wrap">
+    <ul class="menu_wrap" role="tablist">
+        <li class="menu-item" role="presentation">
+            <a href="#none" id="loinid" class="menu_id on" role="tab" aria-selected="true" >
+                    <span class="menu_text">
+                            <span class="text">학생회원 회원가입</span>
+                        </span>
+            </a>
+        </li>
+        <li class="menu_item" role="presentation">
+            <a href="#none" id="ones" class="menu_ones" role="tab" aria-selected="false" onclick="location='/teacher/join'">
+                        <span class="menu_text">
+                            <span class="text">강사회원 회원가입</span>
+                        </span>
+            </a>
+        </li>
+    </ul> <!--학생/강사 선택-->
+</div>
+<div class="container">
+    <div class="inner">
+        <div class="content">
+            <form id="join_form" method="post" action="/student/join" class="form" onsubmit="return boardCheck();">
+                <div class="form_content">
+                    <div class="form_section">
+                        <div class="form_list">
+                            <div class="form_item user" id="divId"> <!--이메일 입력-->
+                                <input type="hidden" id="stuSocial" name="stuSocial" value="normal">
+                                <div class="form_label_container">
+                                    <span>이메일 : </span>
+                                </div>
+                                <input type="text" name="stuEmail" id="stuEmail" class="input" placeholder="이메일을 입력하세요.">
+                                <input type="button" id="id-check" value="중복검사">
+                            </div>
+                            <div class="form_item user" id="id-result"></div><!--중복검사결과-->
+                            <div class="form_item lock password" id="divpasswd"><!--비밀번호 입력-->
+                                <div class="form_label_container">
+                                    <span>비밀번호 : </span>
+                                </div>
+                                <input type="password" name="stuPwd" id="stuPwd" placeholder="비밀번호" class="input" autocomplete="new_password"/>
+                            </div>
+                            <div class="form_item lock password" id="divpasswd2"><!--비밀번호확인 입력-->
+                                <div class="form_label_container">
+                                    <span>비밀번호 확인 : </span>
+                                </div>
+                                <input type="password" name="stuPwd2" id="stuPwd2" placeholder="비밀번호 확인" class="input" autocomplete="new_password"/>
+                            </div>
+                            <div class="form_item" id="divname">
+                                <div class="form_label_container">
+                                    <span>이름 : </span>
+                                </div>
+                                <input type="text" name="stuName" id="stuName" placeholder="이름" class="input" maxlength="8" />
+                            </div>
+                            <div class="form_item" id="divnickname">
+                                <div class="form_label_container">
+                                    <span>닉네임 : </span>
+                                </div>
+                                <input type="text" name="stuNickname" id="stuNickname" placeholder="닉네임" class="input" maxlength="8" />
+                            </div>
+                            <div class="form_item" id="divphone">
+                                <div class="form_label_container">
+                                    <span>핸드폰 : </span>
+                                </div>
+                                <input type="text" name="stuPhone" id="stuPhone"  placeholder="휴대전화번호" class="input" maxlength="13"
+                                       oninput="autoHyphen(this)" pattern="010-[0-9]{3,4}-[0-9]{4}"
+                                       autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="btn_submit_wrap" id="divBtnJoin">
+                            <button type="submit" class="btn_submit" id="btnJoin">가입하기</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+</main>
+
+<div th:replace="~{footer :: footer}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+</body>
+</html>

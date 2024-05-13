@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        function check() {
+            if ($.trim($("#stuPwd").val()) === "") {
+                alert("현재 비밀번호를 입력하세요!");
+                $("#stuPwd").focus(); // ID를 올바르게 참조
+                return false;
+            }
+            if ($.trim($("#stuNewPwd").val()) === "") {
+                alert("신규 비밀번호를 입력하세요!");
+                $("#stuNewPwd").focus(); // ID를 올바르게 참조
+                return false;
+            }
+            if ($.trim($("#stuPwd2").val()) === "") {
+                alert("비밀번호 확인을 입력하세요!");
+                $("#stuPwd2").focus(); // ID를 올바르게 참조
+                return false;
+            }
+            if ($("#stuNewPwd").val() !== $("#stuPwd2").val()) {
+                alert("신규 비밀번호와 비밀번호 확인이 일치하지 않습니다!");
+                $("#stuPwd2").focus();
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+<link href="/css/user.css" rel="stylesheet">
+
+<main class="wrap">
+    <div class="container">
+        <h3 class="title">비밀번호 변경<a onclick="history.go(-1); return false;">뒤로가기<i class="fa-solid fa-chevron-right"></i></a></h3>
+        <form action="/student/pwdUpdate" method="post" onsubmit="return check()">
+            <input type="hidden" name="stuEmail" value="${session.stuEmail }" />
+            <div class="form_content">
+                <div class="form_section">
+                    <div class="form_list">
+                        <div class="form_item user" id="divId">
+                            <div class="form_label_container">
+                                <span>아이디 : </span>
+                            </div>
+                            <input type="text" name="stuEmail" readonly th:value="${session.stuEmail}" class="input">
+                        </div>
+                        <div class="form_item" id="divpwd">
+                            <div class="form_label_container">
+                                <span>현재 비밀번호 : </span>
+                            </div>
+                            <input type="password" name="stuPwd" id="stuPwd" class="input" placeholder="현재 비밀번호"/>
+                        </div>
+                        <div class="form_item" id="divnewpwd">
+                            <div class="form_label_container">
+                                <span>신규 비밀번호 : </span>
+                            </div>
+                            <input type="password" name="stuNewPwd" id="stuNewPwd" class="input" placeholder="신규 비밀번호"/>
+                        </div>
+                        <div class="form_item" id="divname">
+                            <div class="form_label_container">
+                                <span>비밀번호 확인 : </span>
+                            </div>
+                            <input type="password" name="stuPwd2" id="stuPwd2" class="input" placeholder="비밀번호 확인" />
+                        </div>
+            <div class="btn_submit_wrap">
+                <input type="submit" value="수정하기" class="btn_submit"><br>
+            </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+<div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+<link href="/css/user.css" rel="stylesheet">
+
+<main class="mypage-wrap wrap">
+    <div class="info">
+        <div class="mode">
+            <a>학생</a>
+            <a class="on">강사</a>
+        </div>
+        <div class="profile">
+            <p class="img-box">
+                <img th:src="@{/images/ico_teacher.png}">
+            </p>
+            <p th:text="${#strings.substringBefore(session.teaEmail, '@')+'님'}"></p>
+        </div>
+        <div class="btns">
+            <button onclick="location='/teacher/update'">정보수정 하러가기 <i class="fa-regular fa-pen-to-square"></i> </button>
+            <button onclick="location='/teacher/logout'">로그아웃</button>
+        </div>
+    </div>
+    <div class="detail">
+        <div class="box">
+            <h3>나의 활동</h3>
+            <button onclick="location='/teacher/leclist'"><i class="fa-solid fa-chalkboard-user"></i> 내 강의목록</button>
+            <button class="mr" onclick="location='/teacher/lecJoin'"><i class="fa-regular fa-bookmark"></i> 강의 등록</button>
+        </div>
+        <div class="box">
+            <h3>나의 정보</h3>
+            <button onclick="location='/teacher/withdraw'"><i class="fa-solid fa-user-slash"></i> 회원탈퇴</button>
+            <button class="mr" onclick="location='/teacher/pwdUpdate'"><i class="fa-solid fa-repeat"></i> 비밀번호변경</button>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+</body>
+</html>

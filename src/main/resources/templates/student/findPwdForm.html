@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<link href="/css/user.css" rel="stylesheet">
+
+<main class="wrap">
+    <div class="container">
+        <h3 class="title">비밀번호 찾기
+            <a onclick="history.go(-1); return false;">뒤로가기<i class="fa-solid fa-chevron-right"></i></a>
+        </h3>
+        <form method="post" action="/student/findPwd" onsubmit="return check()">
+            <div class="row">아이디 <input type="text" id="stuEmail" name="stuEmail" placeholder="이메일을 입력하세요." /></div>
+            <input class="submit" type="submit" value="비밀번호 찾기">
+        </form>
+    </div>
+</main>
+
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

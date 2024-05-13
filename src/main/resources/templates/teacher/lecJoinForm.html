@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>강의 등록</title>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+<link href="/css/user.css" rel="stylesheet">
+
+<main class="wrap">
+    <div class="container">
+        <h3 class="title">강의 등록<a onclick="history.go(-1); return false;">뒤로가기<i class="fa-solid fa-chevron-right"></i></a></h3>
+        <form method="post" action="/teacher/lecJoin" onsubmit="return lecCheck();">
+            <input type="hidden" name="tea_no" th:value="${teaNo}">
+            <div class="row"><span>강의 이름 :</span> <input type="text" name="lec_name" id="lec_name"/></div>
+            <div class="row">
+                <span>강의 요일 : </span>
+                <label>월<input type="checkbox" name="lec_day" id="monday" value="월"></label>
+                <label>화<input type="checkbox" name="lec_day" value="화"></label>
+                <label>수<input type="checkbox" name="lec_day" value="수"></label>
+                <label>목<input type="checkbox" name="lec_day" value="목"></label>
+                <label>금<input type="checkbox" name="lec_day" value="금"></label>
+                <label>토<input type="checkbox" name="lec_day" value="토"></label>
+                <label>일<input type="checkbox" name="lec_day" value="일"></label>
+            </div>
+            <div class="row"><span>강의 시간 :</span>
+                    <input type="time" id="lec_start_time"/> - <input type="time" id="lec_end_time"/>
+                    <input type="hidden" name="lec_time" id="lec_time"/>
+            </div>
+            <div class="row"><span>강의 가격 :</span><input type="number" name="lec_price" id="lec_price"/></div>
+            <div class="row"><span>강의 내용 :</span><textarea name="lec_detail" id="lec_detail"></textarea></div>
+            <div class="row"><span>강의 날짜 :</span><input type="date" name="lec_startdate" id="lec_startdate"/> - <input type="date" name="lec_enddate" id="lec_enddate"/></div>
+            <div class="btns">
+                <input class="submit" type="submit" value="등록하기">
+            </div>
+        </form>
+    </div>
+</main>
+
+<div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+
+<!-- 유효성 검사 -->
+    function lecCheck() {
+
+        if ($.trim($("#lec_name").val()) === "") {
+            alert("강의 이름을 입력하세요");
+            $("#lec_name").val("").focus();
+            return false;
+        }
+        <!--selectbox 유효성검사 -->
+        var checkboxes = document.getElementsByName('lec_day');
+        var isChecked = false;
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                isChecked = true;
+                break;
+            }
+        }
+        if (!isChecked) {
+            alert("강의 요일을 선택하세요");
+            $("#monday").val("").focus();
+            return false;
+        }
+
+        var startTime = document.getElementById('lec_start_time').value;
+        var endTime = document.getElementById('lec_end_time').value;
+
+        if (startTime === "" || endTime === "") {
+            alert("강의 시간을 모두 입력하세요.");
+            $("#startTime").val("").focus();
+            return false;
+        }
+        if(startTime >= endTime){
+            alert('강의 시작 시간은 종료 시간보다 앞서야 합니다.');
+            return false;
+        }
+
+        if ($.trim($("#lec_price").val()) === "") {
+            alert("강의 가격을 입력하세요");
+            $("#lec_price").val("").focus();
+            return false;
+        }
+        if ($.trim($("#lec_detail").val()) === "") {
+            alert("강의 내용을 입력하세요");
+            $("#lec_detail").val("").focus();
+            return false;
+        }
+        if ($.trim($("#lec_startdate").val()) === "") {
+            alert("강의 날짜를 입력하세요");
+            $("#lec_startdate").val("").focus();
+            return false;
+        }
+
+        var startDate = document.getElementById('lec_startdate').value;
+        var endDate = document.getElementById('lec_enddate').value;
+
+        if ($.trim($("#lec_enddate").val()) === "") {
+            alert("강의 날짜를 입력하세요");
+            $("#lec_enddate").val("").focus();
+            return false;
+        }
+        if(startDate >= endDate){
+            alert('강의 시작 날짜는 종료 날짜보다 앞서야 합니다.')
+            $("#lec_enddate").val("").focus();
+            return false;
+        }
+
+        document.getElementById('lec_time').value = startTime + ' ~ ' + endTime;
+    }
+    // 폼 제출 이벤트에 lecCheck 함수 연결
+    document.querySelector('form').onsubmit = lecCheck;
+
+</script>
+
+</body>
+</html>

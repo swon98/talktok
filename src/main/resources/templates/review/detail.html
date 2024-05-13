@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    .review_contents {
+        position: relative;
+        display: inline-block;
+        width: 100%
+    }
+    .wrapper_small {
+        width: 900px;
+
+        margin: 70px auto;
+        position: relative;
+    }
+    .review_name{
+        padding: 11px;
+        border-top: 1px solid #f9a01b;
+        border-bottom: 1px solid #f9a01b;
+        background: #fcfcfc;
+        font-size: 30px;
+        color: #999999;
+    }
+    .review_lecName{
+
+        font-size: 20px;
+        color: #ba9f7e;
+
+    }
+    .review_teaName{
+        font-size: 12px;
+        color: #800020;
+    }
+    .review_lecTeaName{
+        margin-top: 25px;
+        top: 0;
+        border-bottom: 1px solid #999999;
+    }
+    .review_lecTeaName div{
+        display: inline-block;
+    }
+    .review_info{
+        position: absolute;
+        right: 0px;
+        margin-top: 30px;
+    }
+    .review_info div{
+        display: inline-block;
+    }
+    .review_detail{
+        margin-top: 30px;
+    }
+
+</style>
+</head>
+<body  class="review">
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+
+<main class="wrap">
+    <div class="review_contents">
+        <div class="wrapper_small">
+            <div class="review_name" th:text="${review.rev_name}"></div>
+            <div class="review_info">
+                <div class="review_writer" th:text="${#strings.substring(review.rev_writer, 0, 1)+'**'}"></div>
+                <div class="review_date" th:text="${#strings.substring(review.rev_date, 0, 10)}"></div>
+                <div class="review_reaCount" th:text="${'조회수 : '+review.rev_ReadCount}"></div>
+            </div>
+            <div class="review_lecTeaName">
+                <div class="review_lecName" th:text="${review.lec_name}"></div>
+                <div class="review_teaName" th:text="${review.tea_name}"></div>
+            </div>
+            <div class="review_detail" th:utext="${review.rev_detail}"></div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

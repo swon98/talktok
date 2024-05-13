@@ -1,0 +1,265 @@
+/* loginForm : 로그인폼 */
+.login_wrap {
+    box-sizing: border-box;
+    width: 460px;
+    margin: 0 auto;
+}
+.menu_wrap {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+.menu_item {
+    position: relative;
+    display: table-cell;
+    vertical-align: top;
+}
+.menu_login.on{
+    border-color: #c6c6c6;
+    background-color: #fff;
+    z-index: 5;
+}
+.menu_login {
+    border-right: 0;
+    border-radius: 6px 0 0 0;
+}
+.menu_login{
+    display: block;
+    position: relative;
+    height: 61px;
+    padding-top: 17px;
+    border: 1px solid #e3e3e3;
+    border-bottom: 0;
+    border-radius: 6px 6px 0 0;
+    background-color: #f8f9fa;
+    text-align: center;
+    box-sizing: border-box;
+    z-index: 2;
+}
+.panel_wrap {
+    position: relative;
+    z-index: 3;
+    margin-top: -8px;
+}
+.panel_item {
+    border: 1px solid #c6c6c6;
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: 0 5px 8px 0 rgba(68, 68, 68, .04);
+}
+.panel_inner {
+    padding: 20px 24px;
+}
+.input_row {
+    position: relative;
+    display: block;
+    height: 50px;
+    margin: 8px 0; /* 필요에 따라 조절 */
+    border: 1px solid #dadada; /* 테두리 설정 */
+    border-radius: 6px; /* 모서리를 둥글게 */
+    box-sizing: border-box; /* 테두리와 패딩을 너비에 포함 */
+}
+.id_pw_wrap .input_row .input_text {
+    display: table-cell;
+    padding-right: 30px;
+    border: none;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+.input_text {
+    width: 100%; /* 부모 요소의 전체 너비를 사용 */
+    padding: 10px; /* 외부 `input_row`의 패딩에 맞추어 설정 */
+    border: none; /* 내부 테두리 없음 */
+    box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
+    display: block; /* 블록 레벨 요소로 설정 */
+}
+.btn_login {
+    width: 100%;
+    padding: 10px 0;
+    border-radius: 6px;
+    background-color: #f9a01b;
+    margin-bottom: 5px;
+    color: #fff;
+}
+.btn_login_wrap div a {
+    display: block;
+    width: 100%;
+    border-radius: 6px;
+    background: #fee500;
+    text-align: center;
+}
+.find_wrap, .relogin_find_wrap {
+    padding: 20px 0 35px;
+    text-align: center;
+}
+.find_wrap a {cursor: pointer;}
+.menu_ones {
+    border-right: 0;
+    border-radius: 0;
+}
+.menu_id.on, .menu_ones.on {
+    background-color: #fff;
+}
+.menu_id.on .menu_text, .menu_ones.on .menu_text {
+    color: #222;
+}
+.menu_id {
+    border-right: 0;
+    border-radius: 6px 0 0 0;
+}
+.menu_id, .menu_ones {
+    display: block;
+    position: relative;
+    height: 61px;
+    padding-top: 17px;
+    border: 1px solid #c6c6c6;
+    border-bottom: 0;
+    border-radius: 6px 6px 0 0;
+    background-color: #f8f9fa;
+    text-align: center;
+    box-sizing: border-box;
+    z-index: 2;
+}
+.menu_id .menu_text, .menu_ones .menu_text, .menu_qr .menu_text {
+    font-weight: 500;
+    letter-spacing: -.5px;
+    color: #777;
+}
+
+/* joinForm : 회원가입 폼 */
+.inner{
+    border-top: 1px solid #ccc;
+    margin: 0 40px;
+}
+.container {
+    position: relative;
+    height: 100%;
+}
+div {
+    display: block;
+}
+.content {
+    padding-top: 30px;
+}
+.form {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    height: 100%;
+}
+.form_section {
+    padding: 0 20px;
+}
+.join_toggle:not([style*="display: none"])+.form_list {
+    margin-top: 10px;
+}
+.form_list {
+    position: relative;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+.form_item:first-of-type {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+.form_item:last-child {
+    border-bottom: none; /* 마지막 아이템에서는 하단 경계선 제거 */
+}
+.form_item {
+    display: flex;
+    align-items: center;
+    position: relative;
+    box-sizing: border-box;
+    max-width: 100%;
+    min-height: 50px;
+    padding: 0 10px 0 45px;
+    border-bottom: 1px solid #ccc; /* 폼 아이템 간에 경계선 추가 */
+}
+.input {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 16px;
+    line-height: 22px;
+    color: #222;
+}
+.form_item+.form_item {
+    margin-top: -1px;
+}
+.btn_submit_wrap {
+    flex: none;
+    padding: 20px;
+}
+.btn_submit {
+    width: 100%;
+    padding: 14px 0;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, .05);
+    background: #f9a01b;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 22px;
+    color: #fff;
+}
+input[type="button"] {
+    padding: 5px 10px;
+    background-color: #f9a01b; /* 주황색 배경 */
+    color: white; /* 흰색 텍스트 */
+    border: none;
+    border-radius: 6px; /* 둥근 모서리 */
+    cursor: pointer; /* 커서 포인터 모양 */
+    font-size: 16px; /* 글씨 크기 설정 */
+}
+.form_label_container {
+    display: flex;
+    flex-direction: row; /* 요소들을 가로로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    margin-right: 10px; /* 입력 필드와의 간격 */
+}
+.form_label_container span {
+    min-width: 130px;
+    color: #000; /* 텍스트 색상 보장 */
+    font-size: 16px; /* 가독성 있는 폰트 크기 */
+}
+
+/* myPage */
+.mypage-wrap {display: flex; gap: 40px;}
+.mypage-wrap .info {flex-basis: 15%;}
+.mypage-wrap .info > div {display: flex; align-items: center; flex-direction: column; text-align: center;}
+.mypage-wrap .info .mode {margin-left: 15%; width: 140px; flex-direction: row; border-radius: 50px; background: #eee;}
+.mypage-wrap .info .mode a {width: 50%; border-radius: 50px; font-weight: 500; line-height: 2; color: #999;}
+.mypage-wrap .info .mode a.on {color: #fff; background: #f9a01b;}
+.mypage-wrap .info .profile {margin: 40px 0; padding: 0 0 30px; gap: 10px; border-bottom: 1px solid #eee;}
+.mypage-wrap .info .profile p {font-size: 1.2em; font-weight: 500;}
+.mypage-wrap .info .profile .img-box {width: 80px; height: 80px; border: 1px solid #ddd; border-radius: 50px; overflow:hidden;}
+.mypage-wrap .info .profile .img-box img {width: 100%;}
+.mypage-wrap .info .btns {gap: 15px;}
+.mypage-wrap .info .btns button {width: 100%; height: 40px; border: 1px solid #ddd; border-radius: 50px; color: #999; font-weight: 300;}
+.mypage-wrap .info .btns button:first-of-type {background: #eee; border: 0;}
+.mypage-wrap .detail {flex-basis: calc(85% - 40px); border-left: 1px solid #eee; padding: 0 30px;}
+.mypage-wrap .detail .box + .box {margin: 50px 0;}
+.mypage-wrap .detail .box h3 {font-size: 1.3em;}
+.mypage-wrap .detail .box button {width: 49%; padding: 17px 0; border-bottom: 1px solid #eee; text-align: left;}
+.mypage-wrap .detail .box button.mr {margin-left: 1%;}
+.mypage-wrap .detail .box button::after {display: inline-block; width: 10px; height: 10px; margin: 7px 20px; float: right; border: 1px solid #999; border-width: 1px 1px 0 0; transform: rotate(45deg); content: '';}
+.mypage-wrap .detail .box button i {margin-right: 10px; font-size: 0.9em; color: #555;}
+.mypage-wrap .detail .img-wrap {display: flex; gap: 20px;}
+.mypage-wrap .detail .img-wrap .img-box {border: 1px solid #ddd; border-radius: 6px; overflow: hidden;}
+.mypage-wrap .detail .img-wrap .img-box a {display: block;}
+.mypage-wrap .detail .img-wrap .img-box img {width: 100%;}
+
+/* user 관련 기타 페이지들 */
+.wrap .container {margin: 0 20px; padding: 0 20px;}
+.wrap .container .title {font-size: 180%; text-align:center;}
+.wrap .container .title a {float: right; color: #999; font-size: initial; margin-top: 10px; cursor: pointer;}
+.wrap .container .title a i {margin-left: 10px; font-size: 0.9em;}
+.wrap .container form {margin-top: 30px;}
+.wrap .container form .row {border-bottom: 1px solid #ddd; padding: 5px 0;}
+.wrap .container form .row span {display: inline-block; width: 100px;}
+.wrap .container form .row input[type="text"] {width: calc(100% - 105px); padding: 15px;}
+.wrap .container form .row input[type="checkbox"] {width: 16px; height: 16px; margin: 5px; vertical-align: middle;}
+.wrap .container form .row textarea {vertical-align: top; width: calc(100% - 105px); padding: 15px; outline: 0; border: 1px solid #ddd;}
+.wrap .container form .row label + label {margin: 0 5px;}
+.wrap .container form .submit {float: right; margin: 20px 0; padding: 5px 10px; border-radius: 6px; color: #fff; background: #f9a01b;}

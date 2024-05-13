@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .wrap h2.main-title {margin-bottom: 30px; text-align: center; font-size: 200%; font-weight: 700; letter-spacing: -0.02em;}
+        .wrapper {position: relative; text-align: right;}
+        .wrapper .sort-right .search_input{width: 285px; height: 45px; padding: 0 50px 0 0; display: inline-block; vertical-align: middle; border: 1px solid #db8600; background-color: #fff; border-radius: 5px; position: relative;}
+        input[type="text"] {padding: 10px 10px;}
+        .wrapper .sort-right .search_input .btn_search{width: 50px; position: absolute; right: 0; top: 0; bottom: 0;}
+        .teacher-contents .list-wrap {display:flex; flex-wrap:wrap; gap:20px; margin: 40px 0;}
+        .teacher-contents .list-wrap .teacher-item {flex-basis: calc(25% - 15px); border: 1px solid #ccc; border-radius: 15px; cursor:pointer; overflow: hidden; }
+        .teacher-contents .list-wrap .teacher-item .teacher-inner {display: block; height: 400px;}
+        .teacher-contents .list-wrap .teacher-item .teacher-inner img {width:100%; height: 250px; object-fit: cover;}
+        .teacher-contents .list-wrap .teacher-item .text-box {font-size: 24px; color: #db8600; font-weight: 700; letter-spacing: -2px; line-height: 30px; padding: 20px 30px}
+        .teacher-contents .list-wrap .teacher-item .text-box .desc {font-size: 15px; color: #3b3b3b; font-weight: 400; letter-spacing: -1px; margin-top: 15px; height: 100px}
+
+        .pagination {text-align: center; text-decoration: none;}
+        .pagination .page-item .page-link {
+            color: #db8600; /* 페이징 텍스트 색상을 주황색으로 설정 */
+            background-color: #f8f9fa; /* 페이징 배경색을 주황색으로 설정 */
+        }
+
+        .pagination .page-item.active .page-link {
+            color: #ffffff;
+            background-color: #db8600; /* 활성화된 페이지의 배경색을 주황색으로 설정 */
+        }
+    </style>
+</head>
+<body class="teacher">
+
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+<script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+<main class="wrap contents">
+    <h2 class="main-title">강사소개</h2>
+    <div class="wrapper">
+        <form id="searchTutorForm" name="searchTutorForm" method="get">
+            <div class="sort-right">
+                <div class="search_input">
+                    <input type="text" name="searchTutorName" id="searchTutorName" placeholder="강사 검색">
+                    <button type="submit" class="btn_search">검색</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <form class="teacher-contents">
+        <div class="list-wrap" >
+            <div class="teacher-item" th:each="list : ${teacherList}" th:onclick="|window.location.href = '@{/teacher/detail(teaNo=${list.teaNo})}'|">
+                <div class="teacher-inner">
+                    <img th:if="${list.teaImage != null}" th:src="@{'/files/' + ${list.teaImage}}" />
+                    <img th:unless="${list.teaImage != null}" src="/images/noprofile.png" />
+                    <div class="text-box">
+                        <h2 class="name" th:text="${list.teaName}"></h2>
+                        <div class="desc">
+                            <p class="teacherIntro" th:text="${list.teaIntro}"></p>
+                            <p class="email" th:text="${list.teaEmail}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </form>
+    <!-- 페이징 처리 -->
+    <nav aria-label="Page navigation example">
+        <!--th:with로 변수 선언, start 현재 페이지 그룹의 시작 페이지를 구하는 로직, last 전체 페이지 수와 현재페이지 그룹의 시작 페이지를 통해 현재 페이지 그룹의 마지막 페이지를 구하는 로직 -->
+        <ul class="pagination justify-content-center" th:with="start=${T(java.lang.Math).floor(teacherList.number/10)*10+1}, last=(${start + 9 < teacherList.totalPages ? start + 9 : teacherList.totalPages})">
+            <!--이전 페이지로 이동 -->
+            <li th:class="${teacherList.first ? 'page-item disabled' : 'page-item'}">
+                <a class="page-link" th:if="${!teacherList.first}" th:href="@{/teacher/list(page=${teacherList.number - 1})}" aria-label="Previous">
+                    <span aria-hidden="true">Previous</span>
+                </a>
+            </li>
+            <!-- 페이징 숫자 나열 -->
+            <li th:class="${page == teacherList.number + 1 ? 'page-item active' : 'page-item'}" th:each="page: ${#numbers.sequence(start, last)}" >
+                <a class="page-link" th:text="${page}" th:href="@{/teacher/list(page=${page})}"></a>
+            </li>
+            <!--다음 페이지로 이동 -->
+            <li th:class="${teacherList.last ? 'page-item disabled' : 'page-item'}">
+                <a class="page-link" th:if="${!teacherList.last}" th:href="@{/teacher/list(page=${teacherList.number + 2})}" aria-label="Next">
+                    <span aria-hidden="true">Next</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</main>
+<div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+
+<script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</body>
+</html>

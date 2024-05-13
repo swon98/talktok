@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>detail</title>
+<style>
+    .teacher-view-item {}
+    .teacher-view-item .teacher-detail {margin: 5rem;}
+    .teacher-view-item .teacher-detail .teacher-image-info {display: flex; gap: 5rem;}
+    .teacher-view-item .teacher-detail .teacher-image-info .teacher-image {padding: 0px; border-radius: 10px; flex: 0 0 auto; width: 300px; height: 300px; border: 1px solid #dddddd; overflow: hidden; text-align: center;}
+    .teacher-view-item .teacher-detail .teacher-image-info .teacher-image .img-wrap {width:100%; height: 100%; border-radius:5px;}
+    .teacher-view-item .teacher-detail .teacher-image-info .teacher-image .img-wrap img {width:100%; height: 100%; object-fit:cover;}
+
+    .teacher-view-item .teacher-detail .teacher-image-info .teacher-lecture {}
+    .teacher-view-item .teacher-detail .detail-container .teacher-tab {}
+    .teacher-view-item .teacher-detail .detail-container .teacher-tab .on {color: #fff; background-color: #fcba03; border-bottom-color: #000;}
+    .teacher-view-item .teacher-detail .detail-container .teacher-tab .bg{height: 1rem; transition: 0.5s;}
+    .teacher-view-item .teacher-detail .detail-container .teacher-tab .teacher-lecture {min-width: 130px; height: 55px; padding: 0 40px; text-align: center; font-size: 16px; font-weight: 500; line-height: 55px;border-radius: 30px;}
+    .teacher-view-item .teacher-detail .detail-container .teacher-tab .teacher-review { min-width: 130px; height: 55px; padding: 0 40px; text-align: center; font-size: 16px; font-weight: 500; line-height: 55px;  border-radius: 30px;}
+    .teacher-view-item .teacher-detail .detail-container .teacher-lecture-area {margin-top: 40px;}
+
+
+    .teacher-view-item .teacher-detail .detail-container .teacher-review-area {position: relative; margin-top: 2rem; width: 100%; max-height: 20rem; overflow-y: auto;}
+    .teacher-view-item .teacher-detail .detail-container .teacher-review-area::-webkit-scrollbar {width: 10px;}
+    .teacher-view-item .teacher-detail .detail-container .teacher-review-area::-webkit-scrollbar-thumb {height:20%; border-radius: 10px; background-color: #fcba03; }
+    .teacher-view-item .teacher-detail .detail-container .teacher-review-area::-webkit-scrollbar-track {background-color: rgba(255, 255, 255, 0.5);}
+    .teacher-view-item .teacher-detail .detail-container .teacher-review-area::-webkit-scrollbar-button {}
+
+    .teacher-review-area .teacher-review { width: 100%; margin: 0 auto; position: relative;}
+    .teacher-review-area .teacher-review .teacher_review_box_items {padding: 24px 10px; border-bottom: 1px solid #e5e5e5; position: relative;}
+    .teacher-review-area .teacher-review .teacher_review_box_items .review_detail {width: 950px; color: #666666;}
+    .teacher-review-area .teacher-review .teacher_review_box_items .writerDay_var2 {padding-top: 20px;}
+    .teacher-review-area .teacher-review .teacher_review_box_items .writerDay_var2 span {padding-right: 20px;}
+    .teacher-review-area .teacher-review .teacher_review_box_items .score_star{font-size: 18px; margin-bottom: 15px;}
+</style>
+
+</head>
+<body class="teacher">
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+
+<main class="wrap">
+    <div class="teacher-view-item">
+        <div class="teacher-detail">
+            <div class="teacher-image-info">
+                <div class="teacher-image">
+                    <div class="img-wrap">
+                        <img th:if="${teacherDetail.teaImage != null}" th:src="@{'/files/' + ${teacherDetail.teaImage}}" />
+                        <img th:unless="${teacherDetail.teaImage != null}" src="/images/noprofile.png" />
+                    </div>
+                </div>
+                <div class="teacher-info">
+                    <h1 class="teacherName">이름: <span th:text="${teacherDetail.teaName}"></span></h1>
+                    <p class="teacherSchool">학력: <span th:text="${teacherDetail.teaCareer}"></span></p>
+                    <p class="teaEmail">이메일: <span th:text="${teacherDetail.teaEmail}"></span></p>
+                    <p class="teacherIntro">한 줄 소개: <span th:text="${teacherDetail.teaIntro}"></span></p><br>
+                    <p class="teacher-infoDetail">상세 소개: <span th:text="${teacherDetail.teaDetail}"></span></p>
+                </div>
+            </div>
+            <div class="detail-container">
+                <div class="teacher-tab">
+                    <div class="bg"></div>
+                    <button class="teacher-lecture on">강의</button>
+                    <button class="teacher-review">수업후기</button>
+                </div>
+                <div class="teacher-lecture-area">
+                    <div th:each="list, stat : ${lecture}" class="list">
+                        <a th:href="@{/lecture/detail(no=${list.lec_no}, page=0)}">
+                            <h3 th:text="${list.lec_name}" class="title"></h3>
+                            <p>
+                                <span th:text="${list.lec_day}" ></span>
+                                <span class="formattedTimeRanges" th:data-lec-time="${list.lec_time}"></span>
+                            </p>
+                            <p>월 <span th:text="${list.lec_price}"></span>만원</p>
+                            <p><span th:text="${list.lec_startdate}"></span> ~ <span th:text="${list.lec_enddate}"></span></p>
+                        </a>
+                    </div><br>
+                </div>
+                <div class="teacher-review-area">
+                    <div th:if="${reviews == null or #lists.isEmpty(reviews)}">
+                        <p>등록된 후기가 존재하지 않습니다.</p>
+                    </div>
+                    <div class="teacher-review" th:if="${reviews != null and not #lists.isEmpty(reviews)}" th:each="review : ${reviews}" >
+                        <div class="teacher_review_box_items">
+                            <a th:href="@{/review/detail(rev_no=${review.rev_no})}"><h2 th:text="${review.rev_name}"></h2></a>
+                            <div class="review_detail">
+                                <div id="short_${stat.index}" class="review_detail_short" th:utext="${#strings.abbreviate(review.rev_detail, 150)}"></div>
+                                <div id="full_${stat.index}" class="hidden-content" th:utext="${review.rev_detail}"></div>
+                                <button th:if="${#strings.length(review.rev_detail) > 150}" onclick="toggleContent('${stat.index}')" class="btn btn-link" data-id="${stat.index}">더보기</button>
+                            </div>
+                            <div class="writerDay_var2">
+                                <span th:text="${#strings.substring(review.rev_writer, 0,1)+'**'}"></span>
+                                <span th:text="${#strings.substring(review.rev_date, 0,10)}"></span>
+                            </div>
+                            <div class="score_star">
+                                <div class="rate">
+                                    <span th:if="${review.rev_score >= 10}" style="width: 100%"></span>
+                                    <span th:if="${review.rev_score >= 9}" style="width: 92%"></span>
+                                    <span th:if="${review.rev_score >= 8}" style="width: 80%"></span>
+                                    <span th:if="${review.rev_score >= 7}" style="width: 72%"></span>
+                                    <span th:if="${review.rev_score >= 6}" style="width: 60%"></span>
+                                    <span th:if="${review.rev_score >= 5}" style="width: 52%"></span>
+                                    <span th:if="${review.rev_score >= 4}" style="width: 40%"></span>
+                                    <span th:if="${review.rev_score >= 3}" style="width: 30%"></span>
+                                    <span th:if="${review.rev_score >= 2}" style="width: 20%"></span>
+                                    <span th:if="${review.rev_score >= 1}" style="width: 10%"></span>
+                                </div>
+                                <div th:text="|${review.rev_score}점|"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<script>
+    //버튼 영역 제어
+    $('.teacher-review-area').hide();
+    $('.teacher-lecture').click(function() {
+        $(this).addClass('on');
+        $('.teacher-tab .bg').css('left','5px');
+        $('.teacher-review').removeClass('on');
+        $('.teacher-review-area').hide();
+        $('.teacher-lecture-area').show();
+    });
+    $('.teacher-review').click(function() {
+        $(this).addClass('on');
+        $('.teacher-tab .bg').css('left','33%');
+        $('.teacher-lecture').removeClass('on');
+        $('.teacher-lecture-area').hide();
+        $('.teacher-review-area').show();
+    });
+
+//lec_day 데이터베이스 ,를 스크립트로 ~ 변경 코드
+    document.addEventListener("DOMContentLoaded", function() {
+        var timeRangesElements = document.querySelectorAll(".formattedTimeRanges");
+
+        timeRangesElements.forEach(function(element) {
+            var lecTime = element.getAttribute("data-lec-time");
+            var formattedTimeRange = formatTimeRanges(lecTime);
+            element.textContent = formattedTimeRange; // 각 요소에 시간 범위를 업데이트
+        });
+    });
+
+    function formatTimeRanges(timeRangesString) {
+        var timeRanges = timeRangesString.split(",");
+        return timeRanges.map(function(timeRange) {
+            var times = timeRange.split("-");
+            if (times.length > 1) {
+                return times[0] + " ~ " + times[1];
+            }
+            return timeRange; // 만약 분할되지 않는다면 원래 문자열 반환
+        }).join("~"); // 여러 시간 범위가 있을 경우 콤마로 구분하여 조인
+    }
+</script>
+
+
+</body>
+</html>

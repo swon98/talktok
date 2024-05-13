@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <style>
+        .banner-wrap {color: #fff;}
+        .banner-wrap .box {transition: background 0.3s;}
+        .banner-wrap .box .inner {position: relative; padding: 80px;}
+        .banner-wrap .box .inner .text {}
+        .banner-wrap .box .inner .text h3 {font-size: 25px; font-weight: 400;}
+        .banner-wrap .box .inner .text h2 {margin-bottom: 1em; font-size: 45px; font-weight: 600;}
+        .banner-wrap .box .inner .text p {font-size: 20px; line-height: 1.3;}
+        .banner-wrap .box .inner .img-box {position: absolute; right: 80px; bottom: -30px;}
+        .lecture-wrap .paging {display: flex; justify-content: space-between; align-items: center; margin: 40px 0;}
+        .lecture-wrap .paging button {font-size: 20px; opacity: 0.3; transition: .3s;}
+        .lecture-wrap .paging button:hover {opacity: 1;}
+        .lecture-wrap .paging .progress {position: relative; width: 95%; height: 3px; background: #ddd; border-radius: 10px;}
+        .lecture-wrap .paging .progress .bar {width: 20%; height: 3px; background: #333; transition: width .3s;}
+    </style>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<main>
+    <section class="banner-wrap">
+        <div class="box" style="background:linear-gradient(#ed9221, #f9bf75)">
+            <div class="wrap inner">
+                <div class="text">
+                    <h3>1:1 화상 영어</h3>
+                    <h2>무료수업 3회 체험</h2>
+                    <p>1:1 원하는 커리큘럼 <br> 체험만 받아도 스벅 쿠폰</p>
+                </div>
+                <div class="img-box">
+                    <a><img src="/images/banner01.jpg"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        const h3List = ['1:1 화상 영어','낮시간대 수강 혜택','톡톡 X 카카오톡','카카오톡 플친해요!','리뷰 남기고'];
+        const h2List = ['무료수업 3회 체험','해피아워 이벤트','대학생 수강료 할인','1만원 쿠폰 증정','네이버페이 포인트 받자!'];
+        const pList = ['1:1 원하는 커리큘럼 <br> 체험만 받아도 스벅 쿠폰','낮시간대 수강하고<br> 최대 24% 할인 받자!',
+            '대학교, 대학원에 재학중인<br> 톡학생증 인증 시, 수강료 최대 50% 할인','이제 카카오 채널에서 <br> 더 편리하게 상담 받으세요',
+            '수강 중인 과정의 후기를 남겨주시면 <br> 네이버페이 포인트를 지급해드립니다'];
+        const imgList = ['/images/banner01.jpg','/images/banner02.jpg','/images/banner03.jpg','/images/banner04.jpg','/images/banner05.jpg'];
+        const gradientList = ['#ed9221, #f9bf75','#e94e76, #ff7d9f','#1253c9, #5388e8','#d4b62e, #ecd25d','#232323, #444444'];
+
+        let index = 0;
+
+        function updateContent() {
+            $('.banner-wrap .box .inner .text h3').text(h3List[index]);
+            $('.banner-wrap .box .inner .text h2').text(h2List[index]);
+            $('.banner-wrap .box .inner .text p').html(pList[index]);
+            $('.banner-wrap .box .inner .img-box img').attr('src', imgList[index]);
+            $('.banner-wrap .box').css('background', 'linear-gradient(' + gradientList[index] + ')');
+
+            index = (index + 1) % h3List.length;
+        }
+
+        setInterval(updateContent, 5000);
+
+
+        $(document).ready(function() {
+            // 이미지 URL 배열
+            var lecList = ['/images/lecture01.jpg', '/images/lecture02.jpg', '/images/lecture03.jpg',
+                '/images/lecture04.jpg', '/images/lecture05.jpg'];
+            var teaList = ['/images/teacher01.jpg', '/images/teacher02.jpg', '/images/teacher03.jpg',
+                '/images/teacher04.jpg'];
+
+            // 각 list 요소에 이미지 추가
+            $('.lecture-list').each(function(index) {
+                var img = lecList[index % lecList.length]; // 이미지 URL 배열의 인덱스를 순환
+                var imageElement = $('<img>').attr({
+                    src: img,
+                    alt: '강좌 이미지'
+                });
+                $(this).find('.lecture-img').append(imageElement);
+            });
+            // 각 list 요소에 이미지 추가
+            $('.teacher-list').each(function(index) {
+                var img = teaList[index % teaList.length]; // 이미지 URL 배열의 인덱스를 순환
+                var imageElement = $('<img>').attr({
+                    src: img,
+                    alt: '강사 이미지'
+                });
+                $(this).find('.teacher-img').append(imageElement);
+            });
+
+            $('.lecture-box').slick({
+                centerMode: true,
+                slidesToShow: 3,
+                prevArrow: $('#lecture-prev'),
+                nextArrow: $('#lecture-next')
+            });
+            $('.lecture-box').on('beforeChange', function(event, slick, currentSlide, nextSlide){
+                if (nextSlide === 0) {
+                    $('.progress .bar').css('width', '20%');
+                } else if (nextSlide === 1) {
+                    $('.progress .bar').css('width', '40%');
+                } else if (nextSlide === 2) {
+                    $('.progress .bar').css('width', '60%');
+                } else if (nextSlide === 3) {
+                    $('.progress .bar').css('width', '80%');
+                } else {
+                    $('.progress .bar').css('width', '100%');
+                }
+            });
+            $('.review-box').slick({
+                slidesToShow: 3,
+                autoplay: true,
+                autoplaySpeed: 3000,
+                arrows: false,
+                pauseOnFocus: false,
+                pauseOnHover: false
+            });
+        });
+    </script>
+    <section class="wrap lecture-wrap">
+        <h2 class="title">인기 TOP! 효과 <span class="color-main">톡톡히</span> 보는 강의</h2>
+        <div class="list-box lecture-box">
+            <div th:each="list : ${lectureList}" class="list lecture-list">
+                <a th:href="@{/lecture/detail(page=1, no=${list.lec_no})}">
+                    <div class="lecture-img"></div>
+                    <div class="text">
+                        <h3 th:text="${list.lec_name}" class="title"></h3>
+                        <p>매주 <span th:text="${list.lec_day}"></span></p>
+                        <p>월 <span th:text="${list.lec_price}"></span>원</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="paging">
+            <button id="lecture-prev"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="progress"><div class="bar"></div></div>
+            <button id="lecture-next"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </section>
+    <section class="wrap">
+        <h2 class="title">후기 TOP! 효과 재밌게 <span class="color-main">톡톡</span> 하는 선생님</h2>
+        <div class="list-box teacher-box">
+            <div th:each="list : ${teacherList}" class="list teacher-list">
+                <a th:href="@{/teacher/detail(teaNo=${list.teaNo})}">
+                    <div class="teacher-img"></div>
+                    <div class="text">
+                        <h3 th:text="${list.teaName}" class="title"></h3>
+                        <p><span th:text="${list.teaIntro}"></span></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="wrap">
+        <h2 class="title">수강생들의 리얼 후기</h2>
+        <div class="list-box review-box">
+            <div th:each="list : ${reviewList}" class="list review-list">
+                <a th:href="@{/review/detail(rev_no=${list.rev_no})}">
+                    <h3 th:text="${list.rev_name}" class="title"></h3>
+                    <input type="hidden" th:data-score="${list.rev_score}" class="score">
+                    <p><span class="starRating"></span> <span th:text="'('+${list.rev_score}+'점)'"></span></p>
+                    <p><span th:text="${list.rev_detail.replace('<br>', '. ')}"></span></p>
+                </a>
+            </div>
+        </div>
+    </section>
+    <script>
+        // 모든 .score 요소에 대해 별점생성 함수 호출
+        var scores = document.querySelectorAll('.score');
+        scores.forEach(function(scoreElement) {
+            var score = parseInt(scoreElement.getAttribute('data-score'));
+            var ratingElement = scoreElement.nextElementSibling.querySelector('.starRating');
+            generateStarRating(score, ratingElement);
+        });
+        // 별점생성 함수
+        function generateStarRating(score, ratingElement) {
+            var fullStars = Math.floor(score / 2);
+            var halfStar = score % 2 === 1;
+            var starsHtml = '';
+
+            for (var i = 0; i < fullStars; i++) {
+                starsHtml += '<i class="fa-solid fa-star"></i>';
+            }
+
+            if (halfStar) {
+                starsHtml += '<i class="fa-regular fa-star-half-stroke"></i>';
+            }
+
+            ratingElement.innerHTML = starsHtml;
+        }
+    </script>
+    <section class="wrap">
+        <h2 class="title">최신 공지사항</h2>
+        <table class="notice-list">
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>조회수</th>
+                <th>작성일</th>
+            </tr>
+            <tr th:each="list : ${noticeList}">
+                <td th:text="${list.noNo}"></td>
+                <td>
+                    <a th:href="@{/notice/detail(noNo=${list.noNo}, page=1)}" th:text="${list.noSubject}"></a>
+                </td>
+                <td th:text="관리자"></td>
+                <td th:text="${list.noReadcount}"></td>
+                <td th:text="${#strings.substring(list.noDate, 0,10)}"></td>
+            </tr>
+        </table>
+    </section>
+</main>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

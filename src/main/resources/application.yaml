@@ -1,0 +1,83 @@
+server:
+  port: 80
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://adam.cpiq8808qo9q.ap-northeast-2.rds.amazonaws.com:3306/talktok
+    username: talktok
+    password: choongang
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false  # 개발 중에는 캐시를 비활성화하는 것이 좋습니다.
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            clientId: 425f66c4214454a68dfaa2dc66f30387
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            redirectUri: http://localhost:80/oauth/kakao/callback
+            scope:
+              - profile_nickname
+              - account_email
+#              - name
+#              - phone_number
+            clientName: Kakao
+#          naver:
+#            clientId: mdKA6sN55zOmRKVIwSKl
+#            clientSecret: 2zWypUly75
+#            clientAuthenticationMethod: get
+#            authorizationGrantType: authorization_code
+#            redirectUri: http://localhost:80/oauth/naver/callback
+#            scope:
+#              - profile_nickname
+#              - profile_name
+#              - account_email
+#              - profile_mobile
+#            clientName: Naver
+        provider:
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize
+            tokenUri: https://kauth.kakao.com/oauth/token
+            userInfoUri: https://kapi.kakao.com/v2/user/me
+#          naver:
+#            authorizationUri: https://nid.naver.com/oauth2.0/authorize
+#            tokenUri: https://nid.naver.com/oauth2.0/token
+#            userInfoUri: https://openapi.naver.com/v1/nid/me
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+
+  mail:
+    hostSMTPid: aircamp03@naver.com
+    hostSMTPpwd: aircamp123123
+
+
+    open-in-view: false
+  devtools:
+    livereload:
+      enabled: true
+
+#페이징 페이지 1부터 시작
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
+
+
+  servlet:
+    multipart:
+      max-file-size: 40MB
+      max-request-size: 40MB
+
+app:
+  upload:
+    dir: C:\gitpractice\talktok\src\main\resources\static\files
+

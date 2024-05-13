@@ -1,0 +1,36 @@
+<header th:fragment="headerFragment" id="hd">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link href="https://webfontworld.github.io/pretendard/Pretendard.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/notice.css"/>
+    <div class="wrap">
+        <h1 class="logo">
+            <a href="/main" title="메인으로 바로가기">
+                <img src="/images/logo.png" alt="톡톡스피킹 로고">
+            </a>
+        </h1>
+        <nav class="gnb-wrap">
+            <ol class="gnb">
+                <li class="depth1"><a class="teacher" href="/teacher/list">강사소개</a></li>
+                <li class="depth1"><a class="lecture" href="/lecture/list">커리큘럼</a></li>
+                <li class="depth1"><a class="review" href="/review/list">후기</a></li>
+                <li class="depth1"><a class="notice" href="/notice/list">공지사항/이벤트</a></li>
+            </ol>
+        </nav>
+        <div class="util-menu">
+            <div th:if="${session.stuNo == null} and ${session.teaNo == null}">
+                <a href="/student/login">로그인</a>
+                <a href="/student/join">회원가입</a>
+            </div>
+            <div th:if="${session.stuNo != null}">
+                <a href="/student/myPage">마이페이지</a>
+                <a href="/student/logout">로그아웃</a>
+            </div>
+            <div th:if="${session.teaNo != null}">
+                <a href="/teacher/myPage">마이페이지</a>
+                <a href="/teacher/logout">로그아웃</a>
+            </div>
+        </div>
+    </div>
+</header>

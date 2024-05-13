@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>톡톡스피킹</title>
+    <style>
+        .payment_container {margin-top: 30px;}
+        .payment_container > div + div {margin: 30px 0;}
+        .payment_container > div .payment_name {padding: 20px; border: 1px solid #ddd; border-radius: 10px;}
+        .payment_container > div .payment_name > div {display: inline;}
+    </style>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<link href="/css/user.css" rel="stylesheet">
+
+<main class="wrap">
+    <div class="container">
+        <h3 class="title">강의 결제내역<a onclick="history.go(-1); return false;">뒤로가기<i class="fa-solid fa-chevron-right"></i></a></h3>
+        <div class="payment_container" th:if="${not #lists.isEmpty(stuPayment)}">
+            <div th:each="payment : ${stuPayment}">
+                <div class="payment_name">
+                    결제시각 : <div class="pay_time" th:text="${payment.pay_time}"></div><br/>
+                    결제금액 : <div class="pay_price" th:text="${payment.pay_price}"></div><br/>
+                    강의이름 : <div class="lec_name" th:text="${payment.lec_name}"></div><br/>
+                </div>
+            </div>
+            <div th:if="${#lists.isEmpty(stuPayment)}">
+                <p>강의 결제내역이 없습니다.</p>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    // 요소 선택한 후 배열로 변환, 배열 역순으로 정렬
+    const paymentItems = document.querySelectorAll('.payment_container > div');
+    const paymentItemsArray = Array.from(paymentItems);
+    const reversedPaymentItemsArray = paymentItemsArray.reverse();
+
+    // 정렬된 요소를 다시 container 에 추가하기
+    const paymentContainer = document.querySelector('.payment_container');
+    reversedPaymentItemsArray.forEach(item => {
+        paymentContainer.appendChild(item);
+    });
+</script>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

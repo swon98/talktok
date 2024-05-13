@@ -1,0 +1,31 @@
+.wrap {width: 96%; max-width: 1280px; margin: 0 auto;}
+main.wrap {min-height: 615px; margin: 70px auto;}
+
+@font-face{
+    font-family:'bitbit';
+    src:url('//cdn.df.nexon.com/img/common/font/DNFBitBit-Regular.woff'),url('//cdn.df.nexon.com/img/common/font/DNFBitBit-Regular.woff2') ;
+}
+/*header*/
+#hd {position: sticky; left: 0; top: 0; border-bottom: 1px solid #ccc; background-color: #fff; z-index: 100;}
+#hd .wrap {display: flex; justify-content: space-between; align-items: center;}
+#hd .wrap .logo {width: 140px;}
+#hd .wrap .logo a {display: block; width: 100%;}
+#hd .wrap .logo a img {width: 100%;}
+#hd .wrap .gnb-wrap .gnb {display: flex;}
+#hd .wrap .gnb-wrap .gnb .depth1 {position: relative;}
+#hd .wrap .gnb-wrap .gnb .depth1 > a {display: block; padding: 0 39px; line-height: 80px; font-weight: 500; font-size: 17px; letter-spacing: -0.5px; transition: .3s;}
+#hd .wrap .gnb-wrap .gnb .depth1 > a:hover {color: #f9a01b;}
+#hd .wrap .util-menu {line-height: 50px;}
+#hd .wrap .util-menu div a {font-weight: 500; font-size: 17px; letter-spacing: -0.5px;}
+#hd .wrap .util-menu div a + a {margin-left: 10px;}
+/*gnb*/
+body.teacher #hd .wrap .gnb-wrap .gnb .depth1 > a.teacher,
+body.lecture #hd .wrap .gnb-wrap .gnb .depth1 > a.lecture,
+body.review #hd .wrap .gnb-wrap .gnb .depth1 > a.review,
+body.notice #hd .wrap .gnb-wrap .gnb .depth1 > a.notice {color: #f9a01b; font-weight: 600;}
+
+/*footer*/
+#ft {margin-top: 40px; border-top: 1px solid #ccc;}
+#ft .wrap {padding: 30px 0; color: #bbb; text-align: center;}
+#ft .wrap p {font-size: 1.1em;}
+#ft .wrap span {font-size: 0.8em;}

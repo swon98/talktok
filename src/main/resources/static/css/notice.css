@@ -1,0 +1,40 @@
+.notice-page table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    line-height: 1.5;
+    border-top:4px solid #f9a01b; border-bottom:1px solid #dee2e6;
+    margin:30px auto;
+}
+.notice-page table input, table textarea {width:100%;}
+.notice-page th, td {padding: 10px; border: 1px solid #dee2e6; text-decoration: none; }
+.cart-page th:first-child,
+.cart-page td:first-child {width: 60px; text-align: center;}
+.notice-page pre {text-align: left;}
+
+/*페이지네이션*/
+.notice-page .pagination {display: flex; list-style: none; padding: 0; justify-content: center; margin-top: 20px;}
+.notice-page .pagination li {margin: 0 5px;}
+.notice-page .pagination li a {display: block; padding: 4px 13px; border: 1px solid #ddd;}
+.notice-page .pagination .active a {color: #fff; background-color: #f9a01b; border-color: #f9a01b;}
+
+.notice-page {padding: 0 20px;}
+.notice-page h2 {font-size: 200%; text-align:center; letter-spacing: -0.05em;}
+.notice-page input {border:1px solid #ddd; height: 35px; padding: 0 10px;}
+.notice-page input[type="checkbox"]{width: 15px; height: 15px;}
+.notice-page .btn-submit {
+    padding: 5px 20px;
+    background-color: #f9a01b;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+.notice-page .btns {text-align:right;}
+.notice-page .btns input[type="button"] {
+    padding: 5px 20px;
+    background-color: #f9a01b;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+

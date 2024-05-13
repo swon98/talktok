@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 작성</title>
+    <link rel="stylesheet" type="text/css" href="/css/notice.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+</head>
+
+<body class="notice">
+
+<div th:replace="~{header :: header}"></div> <!-- header.html 에서 header 태그 불러오기 -->
+
+<main class="notice-page wrap">
+    <form th:action="@{/notice/write}" th:object="${notice}" method="post">
+        <table>
+            <h2>글작성</h2>
+            <tr>
+                <th>제목</th>
+                <td><input type="text" id="noSubject" name="noSubject"></td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td><textarea id="noContent" name="noContent"></textarea></td>
+            </tr>
+        </table>
+        <div class="btns">
+            <input type="submit" class="btn-submit" value="작성">
+            <input type="button" value="목록" th:onclick="|location.href='list?page=${page}'|">
+        </div>
+    </form>
+</main>
+
+<div th:replace="~{footer :: footer}"></div> <!-- footer.html 에서 footer 태그 불러오기 -->
+
+</body>
+</html>

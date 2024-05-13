@@ -1,0 +1,40 @@
+section.wrap {margin: 200px auto;}
+h2.title {margin-bottom: 70px; text-align: center; font-size: 180%; font-family: 'bitbit', 'serif'; font-weight: 400;}
+span.color-main {text-decoration: #f9a01b wavy underline; color: #f9a01b;}
+
+/* 메인 리스트 공통 */
+.list-box .list {margin: 0 10px; overflow:hidden; border-radius: 4px;}
+.list-box .list h3 {margin-bottom: 5px; font-size: 1.1em; transition: .3s;}
+/*.list-box .list h3 {font-weight: 500;}*/
+.list-box .list a img {width: 100%; height: 330px; object-fit: cover;}
+.list-box .list a {display: block;}
+.list-box .list a .text {padding: 20px;}
+.list-box .list a .text p {font-size: 15px; color: #3b3b3b; line-height: 1.4;}
+/* 강의 리스트 */
+.lecture-box .slick-list {padding-top: 10px !important; padding-bottom: 30px !important;}
+.lecture-box .slick-list .slick-slide {margin: 0 25px; box-shadow: 1px 5px 10px rgba(0,0,0,.1); transition: .3s ease;}
+.lecture-box .slick-list .slick-slide.slick-center {transform: scale(1.1);}
+.lecture-box .slick-list .slick-slide.slick-center a .text h3 {color: #f9a01b; font-weight: 700;}
+/* 강사 리스트 */
+.teacher-box {display: flex;}
+.teacher-box .list {border: 1px solid #ccc;}
+/* 후기 리스트 */
+.review-box .list {min-height: 300px; border: 1px solid #ccc; border-radius: 4px; letter-spacing: -0.1px; transition: .3s;}
+.review-box .list:hover {border-color: #333;}
+.review-box .list a {display: block; padding: 40px 30px;}
+.review-box .list h3 {margin-bottom:10px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;}
+.review-box .list p .starRating i {color: #ffca00;}
+.review-box .list p:last-of-type {display: -webkit-box; width:100%; overflow: hidden; text-overflow: ellipsis; word-break: break-word; -webkit-line-clamp: 6; -webkit-box-orient: vertical;}
+.review-box .list:nth-of-type(10) {display: none;}
+/* 공지 리스트 */
+.notice-list {width: 100%; border-collapse: collapse; text-align: center;}
+.notice-list table, .notice-list th, .notice-list td {padding: 1em; border: 1px solid #efe0c3;}
+.notice-list tr {transition: .3s;}
+.notice-list tr:hover {background: #fff9f1;}
+.notice-list th:first-of-type,
+.notice-list td:first-of-type {border-left-width: 0;}
+.notice-list th:last-of-type,
+.notice-list td:last-of-type {border-right-width: 0;}
+.notice-list td a {display: block;}
+.notice-list td:nth-of-type(2) {text-align: left;}
+.notice-list th {border-top: 2px solid #f9a01b; background: #fff9f1; color: #f9a01b;}
